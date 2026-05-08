@@ -351,74 +351,74 @@ plot_fast_interactive <- function(results, type = "selection", top_n = 10, highl
   
   return(p_out)
 }
-raw_data <- simulate_breeding_data(n_env = 12, n_geno = 60)
-
-results <- fit_fast(
-  data = raw_data, 
-  genotype_col = "Genotype", 
-  env_col = "Env", 
-  yield_col = "Yield", k=4
-)
-
-# Preview Selections
-print("Top Genotypes by Elemental OP:")
-head(results$FAST)
-
-# Define your checks or specific lines of interest
-my_checks <- c("G1", "G15", "G42")
-
-# 1. Selection Plot: View checks relative to the rest of the population
-plot_fast_interactive (results, type = "selection", highlight = my_checks, top_n = 5)
-
-
-# 2. Biplot: See if your checks are adapted to specific environments
-plot_fast_interactive(results, type = "biplot", highlight = my_checks)
-
-# 3. Selection View: Identify high-performing stable genotypes
-plot_fast_interactive(results, type = "selection")
-
-# 4. Pattern View: See which environments cluster together
-plot_fast_interactive(results, type = "biplot")
-
-# 5. Diagnostic View: How many factors do we really need?
-plot_fast_interactive(results, type = "scree")
-
-# 6. Visualize how each environment 'weights' against the factors
-plot_fast_interactive(results, type = "loadings")
-
-# 7. Visualize the network of environments to see which locations are redundant
-plot_fast_interactive(results, type = "correlation")
-
-# ############ Notes ########################################
-# #The fit_fast function represents a highly robust, two-stage approach to analyzing Multi-Environment Trials (MET). By bridging mixed-model theory (EBLUPs) with multivariate dimension reduction (SVD),
-#it provides a stable approximation of the Factor Analytic (FA) framework.
-# Here is a practical breakdown of the methodology, why it works, and the critical
-#"watch-outs" to keep in mind when deploying it in a live breeding program.
+# raw_data <- simulate_breeding_data(n_env = 12, n_geno = 60)
 # 
-# 1. Stage 1: The Mixed-Model Engine (Shrinkage & Imputation)
-# Methodology: The function first analyzes the raw data using lme4 to fit a linear 
-#mixed model. It dynamically checks if your trial has replications. If yes, it models (1|Genotype) + (1|Genotype:Env). If no, it relies on the residual variance for the interaction. It then extracts the Empirical Best Linear Unbiased Predictors (EBLUPs) specifically for the $G + G \times E$ components, effectively stripping away the environmental main effects (the fact that Location A just yields higher than Location B).
-# Practical Value: * Shrinkage: Unlike simple arithmetic means, EBLUPs apply 
-# "shrinkage." If a genotype performs exceptionally well in one location but is highly variable or poorly replicated, the model conservatively pulls its estimate closer to the population mean.
-# Native Missing Data Handling: In plant breeding, missing data is a guarantee. In a centered EBLUP matrix, the expected value of an unobserved random effect is exactly $0$. The function safely assigns $0$ to missing $G \times E$ cells, allowing the downstream matrix math to run without failing.
-# Watch-Outs:
-#   Computational Bottleneck: While lme4 is fast for hundreds of lines, if you scale this to tens of thousands of lines across dozens of environments (e.g., early-stage yield trials), the mixed-model step can become a computational bottleneck.
-# Extreme Unbalance: If a trial is so unbalanced that some genotypes only appear in one environment with no replication, the shrinkage might be so aggressive that the EBLUP approaches zero, masking a potentially true biological signal.
-
-# 2. Stage 2: Singular Value Decomposition (Dimensionality Reduction)
-# Methodology: The function takes the "clean," centered EBLUP matrix and decomposes it using Singular Value Decomposition (SVD). SVD mathematically rotates the data to find orthogonal (independent) axes—or "latent factors"—that explain the maximum amount of genetic variance.
-# Practical Value:
-#   Simplifying GxE: Instead of looking at a chaotic 150 $\times$ 20 interaction matrix, SVD condenses the noise. Factor 1 usually represents the dominant biological response of the entire trial network (e.g., general adaptation), while Factor 2 might represent a major geographical or stress split (e.g., drought vs. irrigated).
-# Watch-Outs:
-#   Non-Linear Responses: SVD assumes linear relationships. If your $G \times E$ is driven by a stark, non-linear threshold—like a sudden killing frost that wipes out exactly half the trial—SVD might struggle to isolate this into a single clean factor, instead smearing the variance across multiple dimensions.
-# The "k" Limit: You cannot extract more factors ($k$) than the minimum of your genotypes or environments. If you only test in 3 environments, you can only ever have a maximum of $k=3$.
-
-# 3. Stage 3: FAST Metrics (Selection Criteria)
-# Methodology: The function translates the SVD outputs into actionable breeding metrics. 
-# Overall Performance (OP) is extracted directly from the Genotype Scores on Factor 1. Stability is calculated by reconstructing the matrix using only your chosen $k$ factors, finding the residuals (the variance not explained by the factors), and taking the inverse.
-# Practical Value:
-#   Decoupled Metrics: It gives breeders two distinct numbers. You can filter for a baseline Stability (ensuring predictability) and then strictly rank by OP to make your final selections.
-# Watch-Outs:
-#   Redefining "Stability": In the FAST framework, a highly "stable" genotype is not one that yields the exact same amount everywhere. A stable genotype is one whose performance perfectly tracks the dominant latent factors of your network, meaning its behavior is highly predictable.
-# The Danger of Factor 1 Over-Reliance: If you look at the Scree Plot and Factor 1 only explains 35% of the variance, do not select strictly on OP. Low variance on Factor 1 indicates massive crossover $G \times E$ (distinct mega-environments). Selecting solely on OP in this scenario means 
-# you are selecting for a "jack-of-all-trades" that will likely be outcompeted by specifically adapted lines in every individual sub-region.
+# results <- fit_fast(
+#   data = raw_data, 
+#   genotype_col = "Genotype", 
+#   env_col = "Env", 
+#   yield_col = "Yield", k=4
+# )
+# 
+# # Preview Selections
+# print("Top Genotypes by Elemental OP:")
+# head(results$FAST)
+# 
+# # Define your checks or specific lines of interest
+# my_checks <- c("G1", "G15", "G42")
+# 
+# # 1. Selection Plot: View checks relative to the rest of the population
+# plot_fast_interactive (results, type = "selection", highlight = my_checks, top_n = 5)
+# 
+# 
+# # 2. Biplot: See if your checks are adapted to specific environments
+# plot_fast_interactive(results, type = "biplot", highlight = my_checks)
+# 
+# # 3. Selection View: Identify high-performing stable genotypes
+# plot_fast_interactive(results, type = "selection")
+# 
+# # 4. Pattern View: See which environments cluster together
+# plot_fast_interactive(results, type = "biplot")
+# 
+# # 5. Diagnostic View: How many factors do we really need?
+# plot_fast_interactive(results, type = "scree")
+# 
+# # 6. Visualize how each environment 'weights' against the factors
+# plot_fast_interactive(results, type = "loadings")
+# 
+# # 7. Visualize the network of environments to see which locations are redundant
+# plot_fast_interactive(results, type = "correlation")
+# 
+# # ############ Notes ########################################
+# # #The fit_fast function represents a highly robust, two-stage approach to analyzing Multi-Environment Trials (MET). By bridging mixed-model theory (EBLUPs) with multivariate dimension reduction (SVD),
+# #it provides a stable approximation of the Factor Analytic (FA) framework.
+# # Here is a practical breakdown of the methodology, why it works, and the critical
+# #"watch-outs" to keep in mind when deploying it in a live breeding program.
+# # 
+# # 1. Stage 1: The Mixed-Model Engine (Shrinkage & Imputation)
+# # Methodology: The function first analyzes the raw data using lme4 to fit a linear 
+# #mixed model. It dynamically checks if your trial has replications. If yes, it models (1|Genotype) + (1|Genotype:Env). If no, it relies on the residual variance for the interaction. It then extracts the Empirical Best Linear Unbiased Predictors (EBLUPs) specifically for the $G + G \times E$ components, effectively stripping away the environmental main effects (the fact that Location A just yields higher than Location B).
+# # Practical Value: * Shrinkage: Unlike simple arithmetic means, EBLUPs apply 
+# # "shrinkage." If a genotype performs exceptionally well in one location but is highly variable or poorly replicated, the model conservatively pulls its estimate closer to the population mean.
+# # Native Missing Data Handling: In plant breeding, missing data is a guarantee. In a centered EBLUP matrix, the expected value of an unobserved random effect is exactly $0$. The function safely assigns $0$ to missing $G \times E$ cells, allowing the downstream matrix math to run without failing.
+# # Watch-Outs:
+# #   Computational Bottleneck: While lme4 is fast for hundreds of lines, if you scale this to tens of thousands of lines across dozens of environments (e.g., early-stage yield trials), the mixed-model step can become a computational bottleneck.
+# # Extreme Unbalance: If a trial is so unbalanced that some genotypes only appear in one environment with no replication, the shrinkage might be so aggressive that the EBLUP approaches zero, masking a potentially true biological signal.
+# 
+# # 2. Stage 2: Singular Value Decomposition (Dimensionality Reduction)
+# # Methodology: The function takes the "clean," centered EBLUP matrix and decomposes it using Singular Value Decomposition (SVD). SVD mathematically rotates the data to find orthogonal (independent) axes—or "latent factors"—that explain the maximum amount of genetic variance.
+# # Practical Value:
+# #   Simplifying GxE: Instead of looking at a chaotic 150 $\times$ 20 interaction matrix, SVD condenses the noise. Factor 1 usually represents the dominant biological response of the entire trial network (e.g., general adaptation), while Factor 2 might represent a major geographical or stress split (e.g., drought vs. irrigated).
+# # Watch-Outs:
+# #   Non-Linear Responses: SVD assumes linear relationships. If your $G \times E$ is driven by a stark, non-linear threshold—like a sudden killing frost that wipes out exactly half the trial—SVD might struggle to isolate this into a single clean factor, instead smearing the variance across multiple dimensions.
+# # The "k" Limit: You cannot extract more factors ($k$) than the minimum of your genotypes or environments. If you only test in 3 environments, you can only ever have a maximum of $k=3$.
+# 
+# # 3. Stage 3: FAST Metrics (Selection Criteria)
+# # Methodology: The function translates the SVD outputs into actionable breeding metrics. 
+# # Overall Performance (OP) is extracted directly from the Genotype Scores on Factor 1. Stability is calculated by reconstructing the matrix using only your chosen $k$ factors, finding the residuals (the variance not explained by the factors), and taking the inverse.
+# # Practical Value:
+# #   Decoupled Metrics: It gives breeders two distinct numbers. You can filter for a baseline Stability (ensuring predictability) and then strictly rank by OP to make your final selections.
+# # Watch-Outs:
+# #   Redefining "Stability": In the FAST framework, a highly "stable" genotype is not one that yields the exact same amount everywhere. A stable genotype is one whose performance perfectly tracks the dominant latent factors of your network, meaning its behavior is highly predictable.
+# # The Danger of Factor 1 Over-Reliance: If you look at the Scree Plot and Factor 1 only explains 35% of the variance, do not select strictly on OP. Low variance on Factor 1 indicates massive crossover $G \times E$ (distinct mega-environments). Selecting solely on OP in this scenario means 
+# # you are selecting for a "jack-of-all-trades" that will likely be outcompeted by specifically adapted lines in every individual sub-region.

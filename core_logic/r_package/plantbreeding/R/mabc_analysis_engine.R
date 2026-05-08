@@ -191,68 +191,68 @@ plot_mabc_chromosome_maps <- function(ind_id, pop_mat, map_df, trait_list) {
          x = "Position (cM)", y = "Chromosome")
 }
 
-# --- Simulation Setup ---
-set.seed(88)
-n_markers <- 1000
-map_df <- data.frame(
-  Marker_ID = paste0("M_", 1:n_markers),
-  Chr = rep(1:10, each = 100),
-  Pos_cM = rep(seq(0, 99, 1), 10)
-)
-
-# Define Traits
-traits <- list(
-  Trait_A = "M_50",                    # Single SNP
-  Trait_B = c("M_245", "M_246", "M_247", "M_248", "M_249") # Haplotype
-)
-
-# Simulate BC2 Population (~87.5% RP recovery)
-# RP = 0, Donor = 2.
-pop_mat <- matrix(sample(c(0, 1), 100 * n_markers, replace = TRUE, prob = c(0.875, 0.125)), 
-                  nrow = 100, ncol = n_markers)
-colnames(pop_mat) <- map_df$Marker_ID
-rownames(pop_mat) <- paste0("Ind_", 1:100)
-
-# Force carriers for Trait A and Trait B (dosage = 1)
-pop_mat[, unlist(traits)] <- 1
-
-# Inject Real-World Messiness
-# 2% Genotyping Error, 15% Missing Data
-noise_indices <- sample(1:length(pop_mat), length(pop_mat) * 0.17)
-pop_mat[sample(noise_indices, length(noise_indices)*0.1)] <- NA # 15% NA
-pop_mat[sample(noise_indices, length(noise_indices)*0.02)] <- 2  # 2% Error
-
-# --- Execute Analysis ---
-mabc_report <- mabc_analysis_engine(
-  pop_mat = pop_mat, 
-  map_df = map_df, 
-  trait_list = traits, 
-  epsilon = 0.02, 
-  buffer_cM = 10
-)
-
-
-# --- EXECUTION WORKFLOW ---
-
-# 1. ANALYZE: Multi-Locus Engine with NA & Error Handling
-mabc_results <- mabc_analysis_engine(
-  pop_mat = pop_mat, 
-  map_df = map_df, 
-  trait_list = traits, 
-  epsilon = 0.02, 
-  buffer_cM = 10
-)
-
-# 2. RANK: Apply Selection Index
-# We prioritize individuals with low Linkage Drag (w=2)
-final_selection <- rank_mabc_progenies(
-  mabc_report, 
-  weight_rpg = 1, 
-  weight_drag = 2, 
-  min_call_rate = 0.7 
-)
-
-# 3. VISUALIZE: Plot the #1 Ranked Individual
-top_id <- final_selection$Individual_ID[1]
-plot_mabc_chromosome_maps(top_id, pop_mat, map_df, traits)
-
+# # --- Simulation Setup ---
+# set.seed(88)
+# n_markers <- 1000
+# map_df <- data.frame(
+#   Marker_ID = paste0("M_", 1:n_markers),
+#   Chr = rep(1:10, each = 100),
+#   Pos_cM = rep(seq(0, 99, 1), 10)
+# )
+# 
+# # Define Traits
+# traits <- list(
+#   Trait_A = "M_50",                    # Single SNP
+#   Trait_B = c("M_245", "M_246", "M_247", "M_248", "M_249") # Haplotype
+# )
+# 
+# # Simulate BC2 Population (~87.5% RP recovery)
+# # RP = 0, Donor = 2.
+# pop_mat <- matrix(sample(c(0, 1), 100 * n_markers, replace = TRUE, prob = c(0.875, 0.125)), 
+#                   nrow = 100, ncol = n_markers)
+# colnames(pop_mat) <- map_df$Marker_ID
+# rownames(pop_mat) <- paste0("Ind_", 1:100)
+# 
+# # Force carriers for Trait A and Trait B (dosage = 1)
+# pop_mat[, unlist(traits)] <- 1
+# 
+# # Inject Real-World Messiness
+# # 2% Genotyping Error, 15% Missing Data
+# noise_indices <- sample(1:length(pop_mat), length(pop_mat) * 0.17)
+# pop_mat[sample(noise_indices, length(noise_indices)*0.1)] <- NA # 15% NA
+# pop_mat[sample(noise_indices, length(noise_indices)*0.02)] <- 2  # 2% Error
+# 
+# # --- Execute Analysis ---
+# mabc_report <- mabc_analysis_engine(
+#   pop_mat = pop_mat, 
+#   map_df = map_df, 
+#   trait_list = traits, 
+#   epsilon = 0.02, 
+#   buffer_cM = 10
+# )
+# 
+# 
+# # --- EXECUTION WORKFLOW ---
+# 
+# # 1. ANALYZE: Multi-Locus Engine with NA & Error Handling
+# mabc_results <- mabc_analysis_engine(
+#   pop_mat = pop_mat, 
+#   map_df = map_df, 
+#   trait_list = traits, 
+#   epsilon = 0.02, 
+#   buffer_cM = 10
+# )
+# 
+# # 2. RANK: Apply Selection Index
+# # We prioritize individuals with low Linkage Drag (w=2)
+# final_selection <- rank_mabc_progenies(
+#   mabc_report, 
+#   weight_rpg = 1, 
+#   weight_drag = 2, 
+#   min_call_rate = 0.7 
+# )
+# 
+# # 3. VISUALIZE: Plot the #1 Ranked Individual
+# top_id <- final_selection$Individual_ID[1]
+# plot_mabc_chromosome_maps(top_id, pop_mat, map_df, traits)
+# 

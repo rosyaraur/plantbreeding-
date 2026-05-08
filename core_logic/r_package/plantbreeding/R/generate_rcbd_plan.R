@@ -134,18 +134,18 @@ generate_rcbd_plan <- function(lines, checks, n_locs = 2, n_blocks = 3,
   return(list(Data = final_plan, Plot = field_plot))
 }
 
-# ==========================================
-# EXAMPLE USAGE
-# ==========================================
-
-my_lines <- paste0("L-", 1:10)
-my_checks <- c("CHK-A", "CHK-B")
-
-variable_trial <- generate_rcbd_plan(
-  lines = my_lines, 
-  checks = my_checks, 
-  n_locs = 3,             
-  n_blocks = 2,           
-  rows_per_block = c(3, 2, 4), 
-  cols_per_block = c(4, 6, 3)  
-)
+# # ==========================================
+# # EXAMPLE USAGE
+# # ==========================================
+# 
+# my_lines <- paste0("L-", 1:10)
+# my_checks <- c("CHK-A", "CHK-B")
+# 
+# variable_trial <- generate_rcbd_plan(
+#   lines = my_lines, 
+#   checks = my_checks, 
+#   n_locs = 3,             
+#   n_blocks = 2,           
+#   rows_per_block = c(3, 2, 4), 
+#   cols_per_block = c(4, 6, 3)  
+# )

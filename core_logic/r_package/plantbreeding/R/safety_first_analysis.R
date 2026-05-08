@@ -117,20 +117,20 @@ safety_first_analysis <- function(df, genotype_col, yield_col, d_thresholds) {
   return(list(Table = results, Plot = p))
 }
 
-# Simulate trial data
-set.seed(123)
-n_env <- 30
-sim_data <- data.frame(
-  Variety = rep(c("G1", "G2", "G3", "G4"), each = n_env),
-  Yield_Tons_Ha = c(rnorm(n_env, 3.0, 0.5), rnorm(n_env, 4.5, 0.5),
-                    rnorm(n_env, 4.5, 1.2), rnorm(n_env, 6.0, 0.5))
-)
-
-# Run analysis with thresholds at 2.5 and 5.0
-output <- safety_first_analysis(
-  df = sim_data,
-  genotype_col = "Variety",
-  yield_col = "Yield_Tons_Ha",
-  d_thresholds = c(2.5, 5.0)
-)
-plot(output$Plot)
+# # Simulate trial data
+# set.seed(123)
+# n_env <- 30
+# sim_data <- data.frame(
+#   Variety = rep(c("G1", "G2", "G3", "G4"), each = n_env),
+#   Yield_Tons_Ha = c(rnorm(n_env, 3.0, 0.5), rnorm(n_env, 4.5, 0.5),
+#                     rnorm(n_env, 4.5, 1.2), rnorm(n_env, 6.0, 0.5))
+# )
+# 
+# # Run analysis with thresholds at 2.5 and 5.0
+# output <- safety_first_analysis(
+#   df = sim_data,
+#   genotype_col = "Variety",
+#   yield_col = "Yield_Tons_Ha",
+#   d_thresholds = c(2.5, 5.0)
+# )
+# plot(output$Plot)

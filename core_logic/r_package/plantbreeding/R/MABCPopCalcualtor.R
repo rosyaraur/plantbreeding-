@@ -43,65 +43,65 @@ MABCPopCalculator <- function(unlinked_qtls = 0, blocks = list(),
 }
 
 
-# =====================================================================
-# 2. EXAMPLE USAGE (Executes using the function defined above)
-# =====================================================================
-
-# Complex Scenario: 
-# - 1 Unlinked transgenic trait.
-# - Block 1: 3 QTLs in coupling (distances 5cM and 12cM).
-# - Block 2: 2 QTLs in repulsion (distance 8cM).
-my_blocks <- list(
-  list(distances = c(5, 12), phase = "coupling"),
-  list(distances = c(8), phase = "repulsion")
-)
-
-print("--- Complex Scenario ---")
-MABCPopCalculator(
-  unlinked_qtls = 1, 
-  blocks = my_blocks
-)
-
-
-# Scenario 1: The "Easy" Stack (2 unlinked traits)
-print("--- Scenario 1: Easy Stack ---")
-MABCPopCalculator(
-  unlinked_qtls = 2, 
-  blocks = list()
-)
-
-
-# Scenario 2: The "Lucky" Introgression (Coupling Phase Linkage)
-my_blocks_scen2 <- list(
-  list(distances = c(5), phase = "coupling")
-)
-
-print("--- Scenario 2: Coupling ---")
-MABCPopCalculator(
-  unlinked_qtls = 0, 
-  blocks = my_blocks_scen2
-)
-
-
-# Scenario 3: The "Tough" Stack (Repulsion Phase Linkage)
-my_blocks_scen3 <- list(
-  list(distances = c(10), phase = "repulsion")
-)
-
-print("--- Scenario 3: Repulsion ---")
-MABCPopCalculator(
-  unlinked_qtls = 0, 
-  blocks = my_blocks_scen3
-)
-
-
-# Scenario 4: The "Nightmare" Multi-Donor Stack (The Wall)
-my_blocks_scen4 <- list(
-  list(distances = c(10, 2), phase = "repulsion")
-)
-
-print("--- Scenario 4: The Wall ---")
-MABCPopCalculator(
-  unlinked_qtls = 1, 
-  blocks = my_blocks_scen4
-)
+# # =====================================================================
+# # 2. EXAMPLE USAGE (Executes using the function defined above)
+# # =====================================================================
+# 
+# # Complex Scenario: 
+# # - 1 Unlinked transgenic trait.
+# # - Block 1: 3 QTLs in coupling (distances 5cM and 12cM).
+# # - Block 2: 2 QTLs in repulsion (distance 8cM).
+# my_blocks <- list(
+#   list(distances = c(5, 12), phase = "coupling"),
+#   list(distances = c(8), phase = "repulsion")
+# )
+# 
+# print("--- Complex Scenario ---")
+# MABCPopCalculator(
+#   unlinked_qtls = 1, 
+#   blocks = my_blocks
+# )
+# 
+# 
+# # Scenario 1: The "Easy" Stack (2 unlinked traits)
+# print("--- Scenario 1: Easy Stack ---")
+# MABCPopCalculator(
+#   unlinked_qtls = 2, 
+#   blocks = list()
+# )
+# 
+# 
+# # Scenario 2: The "Lucky" Introgression (Coupling Phase Linkage)
+# my_blocks_scen2 <- list(
+#   list(distances = c(5), phase = "coupling")
+# )
+# 
+# print("--- Scenario 2: Coupling ---")
+# MABCPopCalculator(
+#   unlinked_qtls = 0, 
+#   blocks = my_blocks_scen2
+# )
+# 
+# 
+# # Scenario 3: The "Tough" Stack (Repulsion Phase Linkage)
+# my_blocks_scen3 <- list(
+#   list(distances = c(10), phase = "repulsion")
+# )
+# 
+# print("--- Scenario 3: Repulsion ---")
+# MABCPopCalculator(
+#   unlinked_qtls = 0, 
+#   blocks = my_blocks_scen3
+# )
+# 
+# 
+# # Scenario 4: The "Nightmare" Multi-Donor Stack (The Wall)
+# my_blocks_scen4 <- list(
+#   list(distances = c(10, 2), phase = "repulsion")
+# )
+# 
+# print("--- Scenario 4: The Wall ---")
+# MABCPopCalculator(
+#   unlinked_qtls = 1, 
+#   blocks = my_blocks_scen4
+# )

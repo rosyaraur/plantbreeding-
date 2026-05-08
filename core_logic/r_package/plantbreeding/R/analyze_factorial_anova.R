@@ -101,129 +101,129 @@ analyze_factorial_anova <- function(data, response, block = NULL, treatments,
   return(invisible(results))
 }
 
-# Greenhouse Stand (Single-Factor RCBD with Categorical Contrasts)
-# 1. Load the Greenhouse Data (Table 11.10)
-df_stand <- data.frame(
-  Block = rep(1:6, each = 8),
-  Treatment = rep(c("A", "B", "C", "D", "E", "F", "G", "H"), times = 6),
-  Stand = c(8, 16, 14, 10, 8, 8, 7, 12,  
-            8, 19, 16, 11, 7, 8, 6, 19,  
-            9, 24, 14, 12, 1, 3, 6, 9,   
-            7, 22, 13, 8,  1, 3, 6, 11,  
-            7, 19, 14, 7,  3, 3, 4, 9,   
-            5, 19, 13, 3,  2, 7, 4, 5)   
-)
-
-# 2. Define the Orthogonal Contrasts (Table 11.11)
-contrasts_stand <- list(
-  "1: A vs rest"      = c(-7,  1,  1,  1,  1,  1,  1,  1),
-  "2: BC vs DEFGH"    = c( 0,  5,  5, -2, -2, -2, -2, -2),
-  "3: B vs C"         = c( 0,  1, -1,  0,  0,  0,  0,  0),
-  "4: DH vs EFG"      = c( 0,  0,  0,  3, -2, -2, -2,  3),
-  "5: D vs H"         = c( 0,  0,  0,  1,  0,  0,  0, -1),
-  "6: E vs FG"        = c( 0,  0,  0,  0,  2, -1, -1,  0),
-  "7: F vs G"         = c( 0,  0,  0,  0,  0,  1, -1,  0)
-)
-
-# 3. Run the Universal Function
-# Notice we supply the block argument and a single treatment
-res_stand <- analyze_factorial_anova (
-  data = df_stand, 
-  response = "Stand", 
-  block = "Block", 
-  treatments = c("Treatment"), 
-  contrast_matrix = contrasts_stand, 
-  post_hoc = "LSD"
-)
-
-# Soybean Yield (Single-Factor RCBD with Polynomial Splitting)
-# 1. Load the Soybean Yield Data (Table 11.14)
-df_yield <- data.frame(
-  Block = rep(1:6, each = 5),
-  Spacing = rep(c(18, 24, 30, 36, 42), times = 6),
-  Yield = c(33.6, 31.1, 33.0, 28.4, 31.4, 
-            37.1, 34.5, 29.5, 29.9, 28.3,
-            34.1, 30.5, 29.2, 31.6, 28.9, 
-            34.6, 32.7, 30.7, 32.3, 28.6,
-            35.4, 30.7, 30.7, 28.1, 29.6, 
-            36.1, 30.3, 27.9, 26.9, 33.4)
-)
-
-# 2. Define the Polynomial Contrast Matrix (Columns = Degrees)
-poly_matrix <- cbind(
-  Linear    = c(-2, -1,  0,  1,  2),
-  Quadratic = c( 2, -1, -2, -1,  2),
-  Cubic     = c(-1,  2,  0, -2,  1),
-  Quartic   = c( 1, -4,  6, -4,  1)
-)
-
-# 3. Map the matrix columns to the ANOVA split output
-split_list <- list(
-  Linear = 1, 
-  Quadratic = 2, 
-  Cubic = 3, 
-  Quartic = 4
-)
+# # Greenhouse Stand (Single-Factor RCBD with Categorical Contrasts)
+# # 1. Load the Greenhouse Data (Table 11.10)
+# df_stand <- data.frame(
+#   Block = rep(1:6, each = 8),
+#   Treatment = rep(c("A", "B", "C", "D", "E", "F", "G", "H"), times = 6),
+#   Stand = c(8, 16, 14, 10, 8, 8, 7, 12,  
+#             8, 19, 16, 11, 7, 8, 6, 19,  
+#             9, 24, 14, 12, 1, 3, 6, 9,   
+#             7, 22, 13, 8,  1, 3, 6, 11,  
+#             7, 19, 14, 7,  3, 3, 4, 9,   
+#             5, 19, 13, 3,  2, 7, 4, 5)   
+# )
+# 
+# # 2. Define the Orthogonal Contrasts (Table 11.11)
+# contrasts_stand <- list(
+#   "1: A vs rest"      = c(-7,  1,  1,  1,  1,  1,  1,  1),
+#   "2: BC vs DEFGH"    = c( 0,  5,  5, -2, -2, -2, -2, -2),
+#   "3: B vs C"         = c( 0,  1, -1,  0,  0,  0,  0,  0),
+#   "4: DH vs EFG"      = c( 0,  0,  0,  3, -2, -2, -2,  3),
+#   "5: D vs H"         = c( 0,  0,  0,  1,  0,  0,  0, -1),
+#   "6: E vs FG"        = c( 0,  0,  0,  0,  2, -1, -1,  0),
+#   "7: F vs G"         = c( 0,  0,  0,  0,  0,  1, -1,  0)
+# )
+# 
+# # 3. Run the Universal Function
+# # Notice we supply the block argument and a single treatment
+# res_stand <- analyze_factorial_anova (
+#   data = df_stand, 
+#   response = "Stand", 
+#   block = "Block", 
+#   treatments = c("Treatment"), 
+#   contrast_matrix = contrasts_stand, 
+#   post_hoc = "LSD"
+# )
+# 
+# # Soybean Yield (Single-Factor RCBD with Polynomial Splitting)
+# # 1. Load the Soybean Yield Data (Table 11.14)
+# df_yield <- data.frame(
+#   Block = rep(1:6, each = 5),
+#   Spacing = rep(c(18, 24, 30, 36, 42), times = 6),
+#   Yield = c(33.6, 31.1, 33.0, 28.4, 31.4, 
+#             37.1, 34.5, 29.5, 29.9, 28.3,
+#             34.1, 30.5, 29.2, 31.6, 28.9, 
+#             34.6, 32.7, 30.7, 32.3, 28.6,
+#             35.4, 30.7, 30.7, 28.1, 29.6, 
+#             36.1, 30.3, 27.9, 26.9, 33.4)
+# )
+# 
+# # 2. Define the Polynomial Contrast Matrix (Columns = Degrees)
+# poly_matrix <- cbind(
+#   Linear    = c(-2, -1,  0,  1,  2),
+#   Quadratic = c( 2, -1, -2, -1,  2),
+#   Cubic     = c(-1,  2,  0, -2,  1),
+#   Quartic   = c( 1, -4,  6, -4,  1)
+# )
+# 
+# # 3. Map the matrix columns to the ANOVA split output
+# split_list <- list(
+#   Linear = 1, 
+#   Quadratic = 2, 
+#   Cubic = 3, 
+#   Quartic = 4
+# )
 
 # 4. Run the Universal Function
 # The function automatically routes the contrast matrix into the ANOVA summary
-res_yield <- analyze_factorial_anova(
-  data = df_yield, 
-  response = "Yield", 
-  block = "Block", 
-  treatments = c("Spacing"), 
-  contrast_matrix = poly_matrix, 
-  poly_split = split_list,
-  post_hoc = "none"
-)
-
-# Table 11.2: Two-Factor CRD (Lambs)
-# Build Table 11.2 (2x2 Factorial, 5 replicates)
-df_lambs <- data.frame(
-  Time = rep(c("AM", "PM"), each = 10),
-  Estrogen = rep(rep(c("Control", "Treated"), each = 5), times = 2),
-  Phospholipid = c(
-    8.53, 20.53, 12.53, 14.00, 10.80,   # AM, Control
-    17.53, 21.07, 20.80, 17.33, 20.07,  # AM, Treated
-    39.14, 26.20, 31.33, 45.80, 40.20,  # PM, Control
-    32.00, 23.80, 28.87, 25.06, 29.33   # PM, Treated
-  )
-)
-
-# Usage Example:
-analyze_factorial_anova(data = df_lambs, response = "Phospholipid", 
-               block = NULL, treatments = c("Time", "Estrogen"), 
-               post_hoc = "Tukey")
- 
- #Three-Factor CRD (Legume Seeds)
- # 1. Define the exact totals from Table 11.4
- totals <- c(
-   266, 276, 286, 271, 66,  215, # Alfalfa
-   252, 275, 289, 292, 167, 203, # Red clover
-   152, 178, 197, 219, 52,  121  # Sweet clover
- )
- 
- # 2. Simulate 3 replicates that sum exactly to the totals
- set.seed(123)
- reps <- as.vector(sapply(totals, function(tot) {
-   base <- floor(tot / 3)
-   rem <- tot %% 3
-   val <- c(base, base, base)
-   if (rem > 0) val[1:rem] <- val[1:rem] + 1
-   return(val)
- }))
- 
- # 3. Build the 3-Factor dataset
- df_seeds <- data.frame(
-   Species = rep(c("Alfalfa", "Red clover", "Sweet clover"), each = 18),
-   Soil = rep(rep(c("Silt loam", "Sand", "Clay"), each = 6), times = 3),
-   Fungicide = rep(rep(c("None", "Treated"), each = 3), times = 9),
-   Emerged = reps
- )
- 
- # Usage Example:
- analyze_factorial_anova(data = df_seeds, response = "Emerged", 
-               block = NULL, treatments = c("Species", "Soil", "Fungicide"), 
-             post_hoc = "LSD")
- 
+# res_yield <- analyze_factorial_anova(
+#   data = df_yield, 
+#   response = "Yield", 
+#   block = "Block", 
+#   treatments = c("Spacing"), 
+#   contrast_matrix = poly_matrix, 
+#   poly_split = split_list,
+#   post_hoc = "none"
+# )
+# 
+# # Table 11.2: Two-Factor CRD (Lambs)
+# # Build Table 11.2 (2x2 Factorial, 5 replicates)
+# df_lambs <- data.frame(
+#   Time = rep(c("AM", "PM"), each = 10),
+#   Estrogen = rep(rep(c("Control", "Treated"), each = 5), times = 2),
+#   Phospholipid = c(
+#     8.53, 20.53, 12.53, 14.00, 10.80,   # AM, Control
+#     17.53, 21.07, 20.80, 17.33, 20.07,  # AM, Treated
+#     39.14, 26.20, 31.33, 45.80, 40.20,  # PM, Control
+#     32.00, 23.80, 28.87, 25.06, 29.33   # PM, Treated
+#   )
+# )
+# 
+# # Usage Example:
+# analyze_factorial_anova(data = df_lambs, response = "Phospholipid", 
+#                block = NULL, treatments = c("Time", "Estrogen"), 
+#                post_hoc = "Tukey")
+#  
+#  #Three-Factor CRD (Legume Seeds)
+#  # 1. Define the exact totals from Table 11.4
+#  totals <- c(
+#    266, 276, 286, 271, 66,  215, # Alfalfa
+#    252, 275, 289, 292, 167, 203, # Red clover
+#    152, 178, 197, 219, 52,  121  # Sweet clover
+#  )
+#  
+#  # 2. Simulate 3 replicates that sum exactly to the totals
+#  set.seed(123)
+#  reps <- as.vector(sapply(totals, function(tot) {
+#    base <- floor(tot / 3)
+#    rem <- tot %% 3
+#    val <- c(base, base, base)
+#    if (rem > 0) val[1:rem] <- val[1:rem] + 1
+#    return(val)
+#  }))
+#  
+#  # 3. Build the 3-Factor dataset
+#  df_seeds <- data.frame(
+#    Species = rep(c("Alfalfa", "Red clover", "Sweet clover"), each = 18),
+#    Soil = rep(rep(c("Silt loam", "Sand", "Clay"), each = 6), times = 3),
+#    Fungicide = rep(rep(c("None", "Treated"), each = 3), times = 9),
+#    Emerged = reps
+#  )
+#  
+#  # Usage Example:
+#  analyze_factorial_anova(data = df_seeds, response = "Emerged", 
+#                block = NULL, treatments = c("Species", "Soil", "Fungicide"), 
+#              post_hoc = "LSD")
+#  
  

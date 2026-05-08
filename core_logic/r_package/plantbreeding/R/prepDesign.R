@@ -160,23 +160,23 @@ prep_design_inventory <- function(locations_file, genotypes_file, check_proporti
   ))
 }
 
-# Run the p-rep engine
-prep_results <- prep_design_inventory(
-  locations_file = "~/Downloads/locations_parameters.csv", 
-  genotypes_file = "~/Downloads/genotypes_parameters.csv",
-  check_proportion = 0.20, # Generates a true 20/80 p-rep split
-  seed = 42
-)
-
-# Export the final Prism-ready matrix
-write.csv(prep_results$TrialPlan, "P_Rep_Trial_Plan.csv", row.names = FALSE)
-
-# Review your spatial allocations
-print(prep_results$Summary)
-
-# Partially replicated (p-rep) designs are increasingly the standard for early-stage METs (Multi-Environment Trials) because
-# they maximize the number of unique experimental lines you can evaluate while utilizing a dynamic proportion of checks to 
-# capture spatial field variation.
+# # Run the p-rep engine
+# prep_results <- prep_design_inventory(
+#   locations_file = "~/Downloads/locations_parameters.csv", 
+#   genotypes_file = "~/Downloads/genotypes_parameters.csv",
+#   check_proportion = 0.20, # Generates a true 20/80 p-rep split
+#   seed = 42
+# )
+# 
+# # Export the final Prism-ready matrix
+# write.csv(prep_results$TrialPlan, "P_Rep_Trial_Plan.csv", row.names = FALSE)
+# 
+# # Review your spatial allocations
+# print(prep_results$Summary)
+# 
+# # Partially replicated (p-rep) designs are increasingly the standard for early-stage METs (Multi-Environment Trials) because
+# # they maximize the number of unique experimental lines you can evaluate while utilizing a dynamic proportion of checks to 
+# # capture spatial field variation.
 
 # Unlike an Augmented or Alpha design where block dimensions and replications rigidly dictate the math, a p-rep design operates 
 # on a grid-first, proportional basis.

@@ -237,78 +237,78 @@ plot_fst_density <- function(results_df, fst_column = "Global_FST", title = "Dis
   return(p)
 }
 
-# ==============================================================================
-# 2. Load the Data
-# ==============================================================================
-# Read in the CSVs (ensure they are in your working directory)
-geno_df <- read.csv("~/Documents/githubdir/plantbreeding-/package1.0/plantbreeding/data/rice44K.csv", stringsAsFactors = FALSE)
-disp_df <- read.csv("~/Documents/githubdir/plantbreeding-/package1.0/plantbreeding/data/rice44Kdisp.csv", stringsAsFactors = FALSE)
-
-# 1. Get the names of the actual genotype columns (excluding id, chr, position)
-genotype_cols <- colnames(geno_df)[-c(1:3)]
-
-# 2. Extract the NSFTV ID from the column names (e.g., "NSFTV_1" -> "1")
-# This uses gsub to replace "NSFTV_" with nothing
-sample_ids <- gsub("NSFTV_", "", genotype_cols)
-
-# 3. Match the sample IDs to the descriptor file to get the correct subpopulation
-# match() ensures the vector order perfectly aligns with the genotype columns
-pop_assignments <- disp_df$Sub.population[match(sample_ids, disp_df$NSFTV.ID)]
-
-# 4. Run the newly created function
-global_fst_results <- calculate_global_fst(data = geno_df, 
-                                           meta_cols = 3, 
-                                           pop_assignments = pop_assignments)
-
-# 5. Sort by most divergent and view
-global_fst_results <- global_fst_results %>%
-  arrange(desc(Global_FST))
-
-print(head(global_fst_results, 10))
-
-# Save output
-write.csv(global_fst_results, "Global_FST_Results_Modular.csv", row.names = FALSE)
-
-# ---------------------------------------------------------
-# Plotting the Global FST (All 6 subpopulations)
-# ---------------------------------------------------------
-
-# 1. Manhattan Plot
-manhattan_plot_global <- plot_fst_manhattan(
-  results_df = global_fst_results, 
-  fst_column = "Global_FST", 
-  title = "Global FST across 6 Rice Subpopulations"
-)
-
-# Show the plot
-print(manhattan_plot_global)
-
-# Save the plot to a high-resolution image file
-ggsave("Manhattan_Global_FST.png", plot = manhattan_plot_global, width = 10, height = 5, dpi = 300)
-
-# 2. Density Plot
-density_plot_global <- plot_fst_density(global_fst_results, "Global_FST")
-print(density_plot_global)
-
-# calculate pair-wise fst 
-# 1. Get the names of the actual genotype columns
-genotype_cols <- colnames(geno_df)[-c(1:3)]
-
-# 2. Extract the sample IDs and match them to the descriptor file
-sample_ids <- gsub("NSFTV_", "", genotype_cols)
-pop_assignments <- disp_df$Sub.population[match(sample_ids, disp_df$NSFTV.ID)]
-
-# 3. Run the average pairwise function
-avg_pairwise_results <- calculate_avg_pairwise_fst(data = geno_df, 
-                                                   meta_cols = 3, 
-                                                   pop_assignments = pop_assignments)
-
-# 4. Sort by the highest Average Pairwise FST
-avg_pairwise_results <- avg_pairwise_results %>%
-  arrange(desc(Avg_Pairwise_FST))
-
-# 5. View the results (You will see the 15 individual pairwise columns + the final Average)
-print(head(avg_pairwise_results))
-
-# 6. Export to CSV
-write.csv(avg_pairwise_results, "Average_Pairwise_FST.csv", row.names = FALSE)
+# # ==============================================================================
+# # 2. Load the Data
+# # ==============================================================================
+# # Read in the CSVs (ensure they are in your working directory)
+# geno_df <- read.csv("~/Documents/githubdir/plantbreeding-/package1.0/plantbreeding/data/rice44K.csv", stringsAsFactors = FALSE)
+# disp_df <- read.csv("~/Documents/githubdir/plantbreeding-/package1.0/plantbreeding/data/rice44Kdisp.csv", stringsAsFactors = FALSE)
+# 
+# # 1. Get the names of the actual genotype columns (excluding id, chr, position)
+# genotype_cols <- colnames(geno_df)[-c(1:3)]
+# 
+# # 2. Extract the NSFTV ID from the column names (e.g., "NSFTV_1" -> "1")
+# # This uses gsub to replace "NSFTV_" with nothing
+# sample_ids <- gsub("NSFTV_", "", genotype_cols)
+# 
+# # 3. Match the sample IDs to the descriptor file to get the correct subpopulation
+# # match() ensures the vector order perfectly aligns with the genotype columns
+# pop_assignments <- disp_df$Sub.population[match(sample_ids, disp_df$NSFTV.ID)]
+# 
+# # 4. Run the newly created function
+# global_fst_results <- calculate_global_fst(data = geno_df, 
+#                                            meta_cols = 3, 
+#                                            pop_assignments = pop_assignments)
+# 
+# # 5. Sort by most divergent and view
+# global_fst_results <- global_fst_results %>%
+#   arrange(desc(Global_FST))
+# 
+# print(head(global_fst_results, 10))
+# 
+# # Save output
+# write.csv(global_fst_results, "Global_FST_Results_Modular.csv", row.names = FALSE)
+# 
+# # ---------------------------------------------------------
+# # Plotting the Global FST (All 6 subpopulations)
+# # ---------------------------------------------------------
+# 
+# # 1. Manhattan Plot
+# manhattan_plot_global <- plot_fst_manhattan(
+#   results_df = global_fst_results, 
+#   fst_column = "Global_FST", 
+#   title = "Global FST across 6 Rice Subpopulations"
+# )
+# 
+# # Show the plot
+# print(manhattan_plot_global)
+# 
+# # Save the plot to a high-resolution image file
+# ggsave("Manhattan_Global_FST.png", plot = manhattan_plot_global, width = 10, height = 5, dpi = 300)
+# 
+# # 2. Density Plot
+# density_plot_global <- plot_fst_density(global_fst_results, "Global_FST")
+# print(density_plot_global)
+# 
+# # calculate pair-wise fst 
+# # 1. Get the names of the actual genotype columns
+# genotype_cols <- colnames(geno_df)[-c(1:3)]
+# 
+# # 2. Extract the sample IDs and match them to the descriptor file
+# sample_ids <- gsub("NSFTV_", "", genotype_cols)
+# pop_assignments <- disp_df$Sub.population[match(sample_ids, disp_df$NSFTV.ID)]
+# 
+# # 3. Run the average pairwise function
+# avg_pairwise_results <- calculate_avg_pairwise_fst(data = geno_df, 
+#                                                    meta_cols = 3, 
+#                                                    pop_assignments = pop_assignments)
+# 
+# # 4. Sort by the highest Average Pairwise FST
+# avg_pairwise_results <- avg_pairwise_results %>%
+#   arrange(desc(Avg_Pairwise_FST))
+# 
+# # 5. View the results (You will see the 15 individual pairwise columns + the final Average)
+# print(head(avg_pairwise_results))
+# 
+# # 6. Export to CSV
+# write.csv(avg_pairwise_results, "Average_Pairwise_FST.csv", row.names = FALSE)

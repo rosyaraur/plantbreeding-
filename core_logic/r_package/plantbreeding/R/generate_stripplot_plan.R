@@ -137,24 +137,24 @@ generate_stripplot_plan <- function(wp_factor, sp_factor, n_locs = 2, n_blocks =
   return(list(Data = final_plan, Plot = field_plot))
 }
 
-# ==========================================
-# EXAMPLE USAGE
-# ==========================================
-
-# Define 3 Main Plot treatments (e.g., Irrigation methods)
-main_plots <- c("Irrigated", "Dryland", "Deficit")
-
-# Define 5 Sub-plot treatments (e.g., Varieties)
-sub_plots <- paste0("Var-", 1:5)
-
-# Generate the split-plot plan
-# This will result in blocks of 3 rows (Main plots) and 5 columns (Sub-plots)
-split_trial <- generate_stripplot_plan(
-  wp_factor = main_plots, 
-  sp_factor = sub_plots, 
-  n_locs = 2,             # 2 environments
-  n_blocks = 3            # 3 replicates per environment
-)
-
-# Check the generated dataset
-head(split_trial$Data, 10)
+# # ==========================================
+# # EXAMPLE USAGE
+# # ==========================================
+# 
+# # Define 3 Main Plot treatments (e.g., Irrigation methods)
+# main_plots <- c("Irrigated", "Dryland", "Deficit")
+# 
+# # Define 5 Sub-plot treatments (e.g., Varieties)
+# sub_plots <- paste0("Var-", 1:5)
+# 
+# # Generate the split-plot plan
+# # This will result in blocks of 3 rows (Main plots) and 5 columns (Sub-plots)
+# split_trial <- generate_stripplot_plan(
+#   wp_factor = main_plots, 
+#   sp_factor = sub_plots, 
+#   n_locs = 2,             # 2 environments
+#   n_blocks = 3            # 3 replicates per environment
+# )
+# 
+# # Check the generated dataset
+# head(split_trial$Data, 10)

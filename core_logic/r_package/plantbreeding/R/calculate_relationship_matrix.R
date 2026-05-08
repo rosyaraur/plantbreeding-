@@ -101,118 +101,118 @@ plot_grm_heatmap <- function(rel_mat, title = "Genomic Relationship Matrix (GRM)
           scale = "none") # Never scale a relationship matrix for a heatmap
 }
 
-# 1. Load your dataset
-geno_df <- read.csv("~/Documents/githubdir/plantbreeding-/package1.0/plantbreeding/data/rice44K.csv", stringsAsFactors = FALSE)
-#disp_df <- read.csv("~/Documents/githubdir/plantbreeding-/package1.0/plantbreeding/data/rice44Kdisp.csv", stringsAsFactors = FALSE)
-
-
-# 2. Calculate the VanRaden GRM (Standard for Genomic Selection)
-print("Calculating VanRaden GRM...")
-grm_vanraden <- calculate_relationship_matrix(data = geno_df, method = "VanRaden")
-
-# 3. Calculate the Identity by State (IBS) Matrix
-print("Calculating IBS Matrix...")
-grm_ibs <- calculate_relationship_matrix(data = geno_df, method = "IBS")
-
-# 4. View the raw numerical relationships for the first 5 individuals
-print("Top-Left Corner of VanRaden GRM:")
-print(round(grm_vanraden[1:5, 1:5], 3))
-
-# 5. Visualize the Matrices
-# This will group highly related individuals together into red blocks
-plot_grm_heatmap(grm_vanraden, title = "VanRaden Kinship Matrix")
-plot_grm_heatmap(grm_ibs, title = "Identity By State (IBS) Matrix")
-
-# 6. Save the matrix for downstream software (like rrBLUP or GCTA)
-write.csv(grm_vanraden, "VanRaden_GRM.csv", row.names = TRUE)
-
-# Load required libraries
-library(ggplot2)
-library(dplyr)
-
-# Assuming you already have your IBS matrix calculated from the previous step
+# # 1. Load your dataset
+# geno_df <- read.csv("~/Documents/githubdir/plantbreeding-/package1.0/plantbreeding/data/rice44K.csv", stringsAsFactors = FALSE)
+# #disp_df <- read.csv("~/Documents/githubdir/plantbreeding-/package1.0/plantbreeding/data/rice44Kdisp.csv", stringsAsFactors = FALSE)
+# 
+# 
+# # 2. Calculate the VanRaden GRM (Standard for Genomic Selection)
+# print("Calculating VanRaden GRM...")
+# grm_vanraden <- calculate_relationship_matrix(data = geno_df, method = "VanRaden")
+# 
+# # 3. Calculate the Identity by State (IBS) Matrix
+# print("Calculating IBS Matrix...")
 # grm_ibs <- calculate_relationship_matrix(data = geno_df, method = "IBS")
-
-# ==============================================================================
-# 1. Convert Similarity to Distance
-# ==============================================================================
-# Subtract the matrix from 1, and convert it to an official 'dist' object in R
-distance_matrix <- as.dist(1 - grm_ibs)
-
-# ==============================================================================
-# 2. Hierarchical Clustering
-# ==============================================================================
-# We use Ward's method (ward.D2), which minimizes variance within clusters
-hc_model <- hclust(distance_matrix, method = "ward.D2")
-
-# We know there are roughly 6 subpopulations in the rice dataset (IND, TEJ, TRJ, AUS, ADMIX, AROMATIC)
-# Let's tell the algorithm to mathematically cut the tree into 6 distinct branches
-k_groups <- 6
-assigned_clusters <- cutree(hc_model, k = k_groups)
-
-# Plot the Dendrogram
-# We turn off individual labels because 200+ names will overlap and look messy
-plot(hc_model, labels = FALSE, 
-     main = "Hierarchical Clustering of Rice Accessions", 
-     xlab = "Individual Lines", ylab = "Genetic Distance", sub = "")
-
-# Draw colored boxes around the 6 distinct clusters
-rect.hclust(hc_model, k = k_groups, border = rainbow(k_groups))
-
-# ==============================================================================
-# 3. Principal Coordinate Analysis (PCoA) Colored by Clusters
-# ==============================================================================
-# Hierarchical trees are great, but seeing the clusters in a 2D scatter plot is often clearer.
-# cmdscale() performs Multidimensional Scaling on our distance matrix.
-pcoa_res <- cmdscale(distance_matrix, k = 2)
-
-# Create a dataframe combining the PCoA coordinates and the cluster assignments
-cluster_df <- data.frame(
-  Sample = rownames(pcoa_res),
-  PC1 = pcoa_res[, 1],
-  PC2 = pcoa_res[, 2],
-  # Convert cluster number to a factor so it plots as discrete categories
-  Cluster = as.factor(assigned_clusters) 
-)
-
-# Plot using ggplot2
-p_clusters <- ggplot(cluster_df, aes(x = PC1, y = PC2, color = Cluster)) +
-  geom_point(size = 4, alpha = 0.8) +
-  stat_ellipse(level = 0.95, linetype = "dashed", linewidth = 0.5) +
-  theme_minimal() +
-  labs(
-    title = "Genetic Clustering of Individuals",
-    subtitle = paste("Algorithm grouped accessions into", k_groups, "clusters"),
-    x = "Principal Coordinate 1",
-    y = "Principal Coordinate 2"
-  ) +
-  theme(
-    plot.title = element_text(face = "bold", size = 15),
-    legend.position = "right"
-  )
-
-# Display the plot
-print(p_clusters)
-
-# ==============================================================================
-# 4. Compare Algorithm Clusters vs. Genebank Metadata
-# ==============================================================================
-# You can merge these mathematical clusters back with your descriptor file 
-# to see if the algorithm perfectly separated the Indica lines from the Japonica lines!
-#disp_df <- read.csv("rice44Kdisp.csv")
-
-# Ensure the Sample IDs match
-cluster_df$Sample_ID <- gsub("NSFTV_", "", cluster_df$Sample)
-
-comparison_df <- cluster_df %>%
-  # Convert the character IDs back into integers to match the descriptor file
-  mutate(Sample_ID = as.integer(Sample_ID)) %>%
-  left_join(disp_df, by = c("Sample_ID" = "NSFTV.ID")) %>%
-  select(Sample, Cluster, Sub.population)
-
-# Print a cross-tabulation table
-print("Cross-tabulation of Mathematical Clusters vs. Official Subpopulations:")
-print(table(Algorithm_Cluster = comparison_df$Cluster, Official_Label = comparison_df$Sub.population))
-# Print a cross-tabulation table
-print("Cross-tabulation of Mathematical Clusters vs. Official Subpopulations:")
-print(table(Algorithm_Cluster = comparison_df$Cluster, Official_Label = comparison_df$Sub.population))
+# 
+# # 4. View the raw numerical relationships for the first 5 individuals
+# print("Top-Left Corner of VanRaden GRM:")
+# print(round(grm_vanraden[1:5, 1:5], 3))
+# 
+# # 5. Visualize the Matrices
+# # This will group highly related individuals together into red blocks
+# plot_grm_heatmap(grm_vanraden, title = "VanRaden Kinship Matrix")
+# plot_grm_heatmap(grm_ibs, title = "Identity By State (IBS) Matrix")
+# 
+# # 6. Save the matrix for downstream software (like rrBLUP or GCTA)
+# write.csv(grm_vanraden, "VanRaden_GRM.csv", row.names = TRUE)
+# 
+# # Load required libraries
+# library(ggplot2)
+# library(dplyr)
+# 
+# # Assuming you already have your IBS matrix calculated from the previous step
+# # grm_ibs <- calculate_relationship_matrix(data = geno_df, method = "IBS")
+# 
+# # ==============================================================================
+# # 1. Convert Similarity to Distance
+# # ==============================================================================
+# # Subtract the matrix from 1, and convert it to an official 'dist' object in R
+# distance_matrix <- as.dist(1 - grm_ibs)
+# 
+# # ==============================================================================
+# # 2. Hierarchical Clustering
+# # ==============================================================================
+# # We use Ward's method (ward.D2), which minimizes variance within clusters
+# hc_model <- hclust(distance_matrix, method = "ward.D2")
+# 
+# # We know there are roughly 6 subpopulations in the rice dataset (IND, TEJ, TRJ, AUS, ADMIX, AROMATIC)
+# # Let's tell the algorithm to mathematically cut the tree into 6 distinct branches
+# k_groups <- 6
+# assigned_clusters <- cutree(hc_model, k = k_groups)
+# 
+# # Plot the Dendrogram
+# # We turn off individual labels because 200+ names will overlap and look messy
+# plot(hc_model, labels = FALSE, 
+#      main = "Hierarchical Clustering of Rice Accessions", 
+#      xlab = "Individual Lines", ylab = "Genetic Distance", sub = "")
+# 
+# # Draw colored boxes around the 6 distinct clusters
+# rect.hclust(hc_model, k = k_groups, border = rainbow(k_groups))
+# 
+# # ==============================================================================
+# # 3. Principal Coordinate Analysis (PCoA) Colored by Clusters
+# # ==============================================================================
+# # Hierarchical trees are great, but seeing the clusters in a 2D scatter plot is often clearer.
+# # cmdscale() performs Multidimensional Scaling on our distance matrix.
+# pcoa_res <- cmdscale(distance_matrix, k = 2)
+# 
+# # Create a dataframe combining the PCoA coordinates and the cluster assignments
+# cluster_df <- data.frame(
+#   Sample = rownames(pcoa_res),
+#   PC1 = pcoa_res[, 1],
+#   PC2 = pcoa_res[, 2],
+#   # Convert cluster number to a factor so it plots as discrete categories
+#   Cluster = as.factor(assigned_clusters) 
+# )
+# 
+# # Plot using ggplot2
+# p_clusters <- ggplot(cluster_df, aes(x = PC1, y = PC2, color = Cluster)) +
+#   geom_point(size = 4, alpha = 0.8) +
+#   stat_ellipse(level = 0.95, linetype = "dashed", linewidth = 0.5) +
+#   theme_minimal() +
+#   labs(
+#     title = "Genetic Clustering of Individuals",
+#     subtitle = paste("Algorithm grouped accessions into", k_groups, "clusters"),
+#     x = "Principal Coordinate 1",
+#     y = "Principal Coordinate 2"
+#   ) +
+#   theme(
+#     plot.title = element_text(face = "bold", size = 15),
+#     legend.position = "right"
+#   )
+# 
+# # Display the plot
+# print(p_clusters)
+# 
+# # ==============================================================================
+# # 4. Compare Algorithm Clusters vs. Genebank Metadata
+# # ==============================================================================
+# # You can merge these mathematical clusters back with your descriptor file 
+# # to see if the algorithm perfectly separated the Indica lines from the Japonica lines!
+# #disp_df <- read.csv("rice44Kdisp.csv")
+# 
+# # Ensure the Sample IDs match
+# cluster_df$Sample_ID <- gsub("NSFTV_", "", cluster_df$Sample)
+# 
+# comparison_df <- cluster_df %>%
+#   # Convert the character IDs back into integers to match the descriptor file
+#   mutate(Sample_ID = as.integer(Sample_ID)) %>%
+#   left_join(disp_df, by = c("Sample_ID" = "NSFTV.ID")) %>%
+#   select(Sample, Cluster, Sub.population)
+# 
+# # Print a cross-tabulation table
+# print("Cross-tabulation of Mathematical Clusters vs. Official Subpopulations:")
+# print(table(Algorithm_Cluster = comparison_df$Cluster, Official_Label = comparison_df$Sub.population))
+# # Print a cross-tabulation table
+# print("Cross-tabulation of Mathematical Clusters vs. Official Subpopulations:")
+# print(table(Algorithm_Cluster = comparison_df$Cluster, Official_Label = comparison_df$Sub.population))

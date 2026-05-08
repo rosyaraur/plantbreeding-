@@ -193,22 +193,22 @@ adjust_spatial_unreplicated <- function(field_data, method = "spats", knn_k = 4)
   ))
 }
 
-# 1. Run LOESS (Default)
-results_loess <- adjust_spatial_unreplicated(grid, method = "loess")
-grid.arrange(results_loess$plot_raw, results_loess$plot_adj, results_loess$plot_res, ncol = 3)
-
-# 2. Run KNN (Using the 6 nearest check plots)
-results_knn <- adjust_spatial_unreplicated(grid, method = "knn", knn_k = 6)
-grid.arrange(results_knn$plot_raw, results_knn$plot_adj, results_knn$plot_res, ncol = 3)
-
-# 3. Run Mixed Model (Row and Column Effects)
-results_rc <- adjust_spatial_unreplicated(grid, method = "rowcol")
-grid.arrange(results_rc$plot_raw, results_rc$plot_adj, results_rc$plot_res, ncol = 3)
-
-# 1. Run the SpATS 2D Spline # may need significant resources 
-results_spats <- adjust_spatial_unreplicated(grid, method = "spats")
-grid.arrange(results_spats$plot_raw, results_spats$plot_adj, results_spats$plot_res, ncol = 3)
-
-# 2. Run the GAM 2D Spline
-results_gam <- adjust_spatial_unreplicated(grid, method = "gam")
-grid.arrange(results_gam$plot_raw, results_gam$plot_adj, results_gam$plot_res, ncol = 3)
+# # 1. Run LOESS (Default)
+# results_loess <- adjust_spatial_unreplicated(grid, method = "loess")
+# grid.arrange(results_loess$plot_raw, results_loess$plot_adj, results_loess$plot_res, ncol = 3)
+# 
+# # 2. Run KNN (Using the 6 nearest check plots)
+# results_knn <- adjust_spatial_unreplicated(grid, method = "knn", knn_k = 6)
+# grid.arrange(results_knn$plot_raw, results_knn$plot_adj, results_knn$plot_res, ncol = 3)
+# 
+# # 3. Run Mixed Model (Row and Column Effects)
+# results_rc <- adjust_spatial_unreplicated(grid, method = "rowcol")
+# grid.arrange(results_rc$plot_raw, results_rc$plot_adj, results_rc$plot_res, ncol = 3)
+# 
+# # 1. Run the SpATS 2D Spline # may need significant resources 
+# results_spats <- adjust_spatial_unreplicated(grid, method = "spats")
+# grid.arrange(results_spats$plot_raw, results_spats$plot_adj, results_spats$plot_res, ncol = 3)
+# 
+# # 2. Run the GAM 2D Spline
+# results_gam <- adjust_spatial_unreplicated(grid, method = "gam")
+# grid.arrange(results_gam$plot_raw, results_gam$plot_adj, results_gam$plot_res, ncol = 3)

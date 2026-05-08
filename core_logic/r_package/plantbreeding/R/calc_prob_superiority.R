@@ -229,29 +229,29 @@ calc_prob_superiority <- function(data, trait, geno_col, env_col, check_id, meth
 # 3. Execution & Comparison Workflow
 # ==========================================
 
-# A. Generate Data
-cat("\nGenerating MET Data...\n")
-sim_data <- simulate_met_data(n_envs = 15, n_reps = 3, var_ge = 150)
-
-# B. Generate Dummy Genomic Relationship Matrix (G)
-genotypes <- as.character(unique(sim_data$Genotype))
-G <- diag(length(genotypes))
-rownames(G) <- colnames(G) <- genotypes
-
-# Simulate that "Line_B_Stable" and the "Check" share 50% of their genome
-G["Line_B_Stable", "Check"] <- 0.50
-G["Check", "Line_B_Stable"] <- 0.50
-diag(G) <- diag(G) + 0.001 # Ensure matrix is perfectly positive definite
-
-# C. Calculate using all methods
-cat("\n--- 1. Empirical Means ---\n")
-print(calc_prob_superiority(sim_data, "Yield", "Genotype", "Environment", "Check", method = "mean"))
-
-cat("\n--- 2. BLUEs (lme4) ---\n")
-print(calc_prob_superiority(sim_data, "Yield", "Genotype", "Environment", "Check", method = "BLUE"))
-
-cat("\n--- 3. Base BLUPs (lme4, no G matrix) ---\n")
-print(calc_prob_superiority(sim_data, "Yield", "Genotype", "Environment", "Check", method = "BLUP"))
-
-cat("\n--- 4. GBLUPs (sommer, with G matrix) ---\n")
-print(calc_prob_superiority(sim_data, "Yield", "Genotype", "Environment", "Check", method = "GBLUP", G_matrix = G))
+# # A. Generate Data
+# cat("\nGenerating MET Data...\n")
+# sim_data <- simulate_met_data(n_envs = 15, n_reps = 3, var_ge = 150)
+# 
+# # B. Generate Dummy Genomic Relationship Matrix (G)
+# genotypes <- as.character(unique(sim_data$Genotype))
+# G <- diag(length(genotypes))
+# rownames(G) <- colnames(G) <- genotypes
+# 
+# # Simulate that "Line_B_Stable" and the "Check" share 50% of their genome
+# G["Line_B_Stable", "Check"] <- 0.50
+# G["Check", "Line_B_Stable"] <- 0.50
+# diag(G) <- diag(G) + 0.001 # Ensure matrix is perfectly positive definite
+# 
+# # C. Calculate using all methods
+# cat("\n--- 1. Empirical Means ---\n")
+# print(calc_prob_superiority(sim_data, "Yield", "Genotype", "Environment", "Check", method = "mean"))
+# 
+# cat("\n--- 2. BLUEs (lme4) ---\n")
+# print(calc_prob_superiority(sim_data, "Yield", "Genotype", "Environment", "Check", method = "BLUE"))
+# 
+# cat("\n--- 3. Base BLUPs (lme4, no G matrix) ---\n")
+# print(calc_prob_superiority(sim_data, "Yield", "Genotype", "Environment", "Check", method = "BLUP"))
+# 
+# cat("\n--- 4. GBLUPs (sommer, with G matrix) ---\n")
+# print(calc_prob_superiority(sim_data, "Yield", "Genotype", "Environment", "Check", method = "GBLUP", G_matrix = G))

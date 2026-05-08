@@ -106,16 +106,16 @@ AUDPC.cal <- function(reading.dates, severity.data, plot = TRUE) {
   return(out)
 }
 
-# Example Data
-reading.dates <- as.Date(c("2012-02-13","2012-02-20","2012-02-28"))
-mydat <- data.frame(ID = c("A", "B", "C", "D"), 
-                    Date1 = c(1, 2, 3, 4), 
-                    Date2 = c(5, 6, 7, 8),
-                    Date3 = c(11, 12, 13, 14))
-
-# Run the calculation with plotting enabled
-# Note: Look at your plot viewer. You will need to press "Enter" in the console to cycle through individuals A, B, C, and D.
-cd <- AUDPC.cal(reading.dates, mydat, plot = TRUE)
-
-# View the final output table
-print(cd)
+# # Example Data
+# reading.dates <- as.Date(c("2012-02-13","2012-02-20","2012-02-28"))
+# mydat <- data.frame(ID = c("A", "B", "C", "D"), 
+#                     Date1 = c(1, 2, 3, 4), 
+#                     Date2 = c(5, 6, 7, 8),
+#                     Date3 = c(11, 12, 13, 14))
+# 
+# # Run the calculation with plotting enabled
+# # Note: Look at your plot viewer. You will need to press "Enter" in the console to cycle through individuals A, B, C, and D.
+# cd <- AUDPC.cal(reading.dates, mydat, plot = TRUE)
+# 
+# # View the final output table
+# print(cd)

@@ -190,47 +190,47 @@ comstock_robinson_gxe <- function(data, trait, genotype, location, rep, year = N
   return(results)
 }
 
-wheat_yield_data <- data.frame(
-  Genotype = rep(c("A", "B", "C", "D", "E", "F", "G"), each = 18),
-  Location = rep(rep(c("L1", "L2", "L3"), each = 6), times = 7),
-  Year     = rep(rep(c("Y1", "Y2"), each = 3), times = 21),
-  Rep      = rep(c("R1", "R2", "R3"), times = 42),
-  Yield    = c(
-    # Genotype A
-    60, 65, 60, 80, 65, 75, 70, 75, 70, 72, 82, 90, 48, 45, 50, 50, 40, 40,
-    # Genotype B
-    80, 90, 83, 70, 60, 60, 85, 90, 90, 70, 85, 80, 40, 40, 40, 38, 40, 50,
-    # Genotype C
-    25, 28, 30, 40, 35, 35, 35, 30, 30, 40, 35, 35, 35, 25, 20, 35, 30, 30,
-    # Genotype D
-    50, 65, 50, 40, 40, 40, 48, 50, 52, 45, 45, 50, 50, 50, 45, 40, 48, 40,
-    # Genotype E
-    52, 50, 55, 55, 54, 50, 40, 40, 60, 48, 38, 45, 38, 30, 40, 35, 40, 35,
-    # Genotype F
-    22, 25, 25, 30, 28, 32, 28, 25, 30, 26, 28, 28, 45, 50, 45, 50, 50, 50,
-    # Genotype G
-    30, 30, 25, 28, 34, 35, 40, 45, 35, 30, 32, 35, 45, 35, 38, 44, 45, 40
-  )
-)
-
-# 4. Run the Analyses
-cat("\n--- Running Original Textbook Approach (ANOVA) ---\n")
-results_original <- comstock_robinson_gxe(wheat_yield_data, "Yield", "Genotype", "Location", "Year", "Rep", method = "original")
-print(results_original$Variance_Components)
-results_original$Method
-cat("Heritability (H2):", results_original$Heritability, "\n")
-# View the Genotype effects
-print(results_original$Effect_Estimates$G)
-# View the Genotype by Location interaction effects
-print(results_original$Effect_Estimates$GxL)
-
-cat("\n--- Running Modern Mixed Model Approach (REML) ---\n")
-results_mixed <- comstock_robinson_gxe(wheat_yield_data, "Yield", "Genotype", "Location", "Year", "Rep", method = "mixed")
-print(results_mixed$Variance_Components)
-print(results_mixed$Variance_Components$Component)
-results_mixed$Method
-print(results_mixed$Effect_Estimates$G)
-# View the Genotype by Location interaction effects
-print(results_mixed$Effect_Estimates$GxL)
-cat("Heritability (H2):", results_mixed$Heritability, "\n")
-
+# wheat_yield_data <- data.frame(
+#   Genotype = rep(c("A", "B", "C", "D", "E", "F", "G"), each = 18),
+#   Location = rep(rep(c("L1", "L2", "L3"), each = 6), times = 7),
+#   Year     = rep(rep(c("Y1", "Y2"), each = 3), times = 21),
+#   Rep      = rep(c("R1", "R2", "R3"), times = 42),
+#   Yield    = c(
+#     # Genotype A
+#     60, 65, 60, 80, 65, 75, 70, 75, 70, 72, 82, 90, 48, 45, 50, 50, 40, 40,
+#     # Genotype B
+#     80, 90, 83, 70, 60, 60, 85, 90, 90, 70, 85, 80, 40, 40, 40, 38, 40, 50,
+#     # Genotype C
+#     25, 28, 30, 40, 35, 35, 35, 30, 30, 40, 35, 35, 35, 25, 20, 35, 30, 30,
+#     # Genotype D
+#     50, 65, 50, 40, 40, 40, 48, 50, 52, 45, 45, 50, 50, 50, 45, 40, 48, 40,
+#     # Genotype E
+#     52, 50, 55, 55, 54, 50, 40, 40, 60, 48, 38, 45, 38, 30, 40, 35, 40, 35,
+#     # Genotype F
+#     22, 25, 25, 30, 28, 32, 28, 25, 30, 26, 28, 28, 45, 50, 45, 50, 50, 50,
+#     # Genotype G
+#     30, 30, 25, 28, 34, 35, 40, 45, 35, 30, 32, 35, 45, 35, 38, 44, 45, 40
+#   )
+# )
+# 
+# # 4. Run the Analyses
+# cat("\n--- Running Original Textbook Approach (ANOVA) ---\n")
+# results_original <- comstock_robinson_gxe(wheat_yield_data, "Yield", "Genotype", "Location", "Year", "Rep", method = "original")
+# print(results_original$Variance_Components)
+# results_original$Method
+# cat("Heritability (H2):", results_original$Heritability, "\n")
+# # View the Genotype effects
+# print(results_original$Effect_Estimates$G)
+# # View the Genotype by Location interaction effects
+# print(results_original$Effect_Estimates$GxL)
+# 
+# cat("\n--- Running Modern Mixed Model Approach (REML) ---\n")
+# results_mixed <- comstock_robinson_gxe(wheat_yield_data, "Yield", "Genotype", "Location", "Year", "Rep", method = "mixed")
+# print(results_mixed$Variance_Components)
+# print(results_mixed$Variance_Components$Component)
+# results_mixed$Method
+# print(results_mixed$Effect_Estimates$G)
+# # View the Genotype by Location interaction effects
+# print(results_mixed$Effect_Estimates$GxL)
+# cat("Heritability (H2):", results_mixed$Heritability, "\n")
+# 

@@ -169,19 +169,19 @@ GGE_Biplot_Analysis <- function(indata, gen_col, draw_circles = TRUE) {
   ))
 }
 
-# 1. Create the test dataset matching Table 4.4 format
-wheat_trials <- data.frame(
-  Names = c("Ann", "Ari", "Aug", "Cas", "Del"),
-  BH93 = c(4.460, 4.417, 4.669, 4.732, 4.390),
-  EA93 = c(4.150, 4.771, 4.578, 4.745, 4.603),
-  HW93 = c(2.849, 2.912, 3.098, 3.375, 3.511),
-  ID93 = c(3.084, 3.506, 3.460, 3.904, 3.848),
-  KE93 = c(5.940, 5.699, 6.070, 6.224, 5.773),
-  NN93 = c(4.450, 5.152, 5.025, 5.340, 5.421),
-  OA93 = c(4.351, 4.956, 4.730, 4.226, 5.147),
-  RN93 = c(4.039, 4.386, 3.900, 4.893, 4.098),
-  WP93 = c(2.672, 2.938, 2.621, 3.451, 2.832)
-)
-
-# 2. Call the function!
-GGE_Biplot_Analysis(indata = wheat_trials, gen_col = "Names")
+# # 1. Create the test dataset matching Table 4.4 format
+# wheat_trials <- data.frame(
+#   Names = c("Ann", "Ari", "Aug", "Cas", "Del"),
+#   BH93 = c(4.460, 4.417, 4.669, 4.732, 4.390),
+#   EA93 = c(4.150, 4.771, 4.578, 4.745, 4.603),
+#   HW93 = c(2.849, 2.912, 3.098, 3.375, 3.511),
+#   ID93 = c(3.084, 3.506, 3.460, 3.904, 3.848),
+#   KE93 = c(5.940, 5.699, 6.070, 6.224, 5.773),
+#   NN93 = c(4.450, 5.152, 5.025, 5.340, 5.421),
+#   OA93 = c(4.351, 4.956, 4.730, 4.226, 5.147),
+#   RN93 = c(4.039, 4.386, 3.900, 4.893, 4.098),
+#   WP93 = c(2.672, 2.938, 2.621, 3.451, 2.832)
+# )
+# 
+# # 2. Call the function!
+# GGE_Biplot_Analysis(indata = wheat_trials, gen_col = "Names")

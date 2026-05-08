@@ -42,23 +42,23 @@ calc_prob_from_summary <- function(line_mean, check_mean, pop_var_means, H2, lin
   ))
 }
 
-# Scenario A: We only have trial averages (Homogeneous assumption)
-res_standard <- calc_prob_from_summary(
-  line_mean = 104, 
-  check_mean = 100, 
-  pop_var_means = 25, 
-  H2 = 0.75
-)
-
-# Scenario B: We know the test line is highly unstable across environments
-res_penalized <- calc_prob_from_summary(
-  line_mean = 104, 
-  check_mean = 100, 
-  pop_var_means = 25, 
-  H2 = 0.75,
-  line_gxe_var = 45  # Specific penalty applied
-)
-
-# Combine and print to compare
-print(rbind(res_standard, res_penalized))
+# # Scenario A: We only have trial averages (Homogeneous assumption)
+# res_standard <- calc_prob_from_summary(
+#   line_mean = 104, 
+#   check_mean = 100, 
+#   pop_var_means = 25, 
+#   H2 = 0.75
+# )
+# 
+# # Scenario B: We know the test line is highly unstable across environments
+# res_penalized <- calc_prob_from_summary(
+#   line_mean = 104, 
+#   check_mean = 100, 
+#   pop_var_means = 25, 
+#   H2 = 0.75,
+#   line_gxe_var = 45  # Specific penalty applied
+# )
+# 
+# # Combine and print to compare
+# print(rbind(res_standard, res_penalized))
 

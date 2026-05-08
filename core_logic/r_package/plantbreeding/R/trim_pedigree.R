@@ -69,15 +69,15 @@ trim_pedigree <- function(ped_data, targets, founder_marks = c("*", "NA", "nan",
   }
 }
 
-# 1. Load your data
-full_pedigree_df <- read.csv("~/Documents/githubdir/DataIntellEngine/apps/shiny/pedigreeExplorer/apple_ped_complete.csv")
-
-# 2. Define the individuals you want to track
-my_targets <- c("AE0234", "Pop_HCxAr", "CornellPop13")
-
-# 3. Run the function
-trimmed_pedigree_df <- trim_pedigree(full_pedigree_df, my_targets)
-
-# 4. View and export the result
-print(trimmed_pedigree_df)
-write.csv(trimmed_pedigree_df, "trimmed_pedigree_output.csv", row.names = FALSE)
+# # 1. Load your data
+# full_pedigree_df <- read.csv("~/Documents/githubdir/DataIntellEngine/apps/shiny/pedigreeExplorer/apple_ped_complete.csv")
+# 
+# # 2. Define the individuals you want to track
+# my_targets <- c("AE0234", "Pop_HCxAr", "CornellPop13")
+# 
+# # 3. Run the function
+# trimmed_pedigree_df <- trim_pedigree(full_pedigree_df, my_targets)
+# 
+# # 4. View and export the result
+# print(trimmed_pedigree_df)
+# write.csv(trimmed_pedigree_df, "trimmed_pedigree_output.csv", row.names = FALSE)

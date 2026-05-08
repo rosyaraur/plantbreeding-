@@ -72,21 +72,21 @@ plotGeneticGain <- function(df, cycle_col = "cycle", value_col = "values") {
   mtext("Y values", side = 2, outer = TRUE, line = 2, font = 2)
 }
 
-# Generate LONG format sample data including a 5th cycle
-set.seed(42)
-
-df_long <- data.frame(
-  cycle = rep(paste("Cycle", 1:6), each = 1000),
-  values = c(
-    rnorm(1000, mean = -1.0, sd = 0.6),
-    rnorm(1000, mean = -1.8, sd = 0.5),
-    rnorm(1000, mean = 0.6, sd = 0.55),
-    rnorm(1000, mean = -3.2, sd = 0.45),
-    rnorm(1000, mean = -4.0, sd = 0.5) ,
-    rnorm(1000, mean = -6.0, sd = 0.2)
-  )
-)
-
-# Run the function
-# Note: Ensure your plotting window in R is wide enough to fit 5 columns comfortably!
-plotGeneticGain(df_long, cycle_col = "cycle", value_col = "values")
+# # Generate LONG format sample data including a 5th cycle
+# set.seed(42)
+# 
+# df_long <- data.frame(
+#   cycle = rep(paste("Cycle", 1:6), each = 1000),
+#   values = c(
+#     rnorm(1000, mean = -1.0, sd = 0.6),
+#     rnorm(1000, mean = -1.8, sd = 0.5),
+#     rnorm(1000, mean = 0.6, sd = 0.55),
+#     rnorm(1000, mean = -3.2, sd = 0.45),
+#     rnorm(1000, mean = -4.0, sd = 0.5) ,
+#     rnorm(1000, mean = -6.0, sd = 0.2)
+#   )
+# )
+# 
+# # Run the function
+# # Note: Ensure your plotting window in R is wide enough to fit 5 columns comfortably!
+# plotGeneticGain(df_long, cycle_col = "cycle", value_col = "values")

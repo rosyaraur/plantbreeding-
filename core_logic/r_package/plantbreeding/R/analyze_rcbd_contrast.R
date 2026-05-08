@@ -146,77 +146,77 @@ analyze_rcbd_contrast <- function(data, response, block, treatments,
   
   return(invisible(results))
 }
-# Example Usage for Table 11.14 (Polynomial Partitioning)
-# 1. Create the dataset (Table 11.14)
-yield_data <- data.frame(
-  Block = rep(1:6, each = 5),
-  Spacing = rep(c(18, 24, 30, 36, 42), times = 6),
-  Yield = c(
-    33.6, 31.1, 33.0, 28.4, 31.4,
-    37.1, 34.5, 29.5, 29.9, 28.3,
-    34.1, 30.5, 29.2, 31.6, 28.9,
-    34.6, 32.7, 30.7, 32.3, 28.6,
-    35.4, 30.7, 30.7, 28.1, 29.6,  # Note: 29.6 is the estimated missing plot
-    36.1, 30.3, 27.9, 26.9, 33.4
-  )
-)
-
-# 2. Define the exact polynomial contrast matrix (columns = degrees)
-poly_matrix <- cbind(
-  Linear    = c(-2, -1,  0,  1,  2),
-  Quadratic = c( 2, -1, -2, -1,  2),
-  Cubic     = c(-1,  2,  0, -2,  1),
-  Quartic   = c( 1, -4,  6, -4,  1)
-)
-
-# 3. Run the updated function
-analysis_results <- analyze_rcbd_contrast(
-  data = yield_data,
-  response = "Yield",
-  block = "Block",
-  treatments = c("Spacing"),
-  contrast_matrix = poly_matrix,         # Pass the matrix here
-  poly_split = list(                     # Map matrix columns to the split output
-    Linear = 1, 
-    Quadratic = 2, 
-    Cubic = 3, 
-    Quartic = 4
-  ),
-  post_hoc = "none" # Skipping LSD since we are looking at continuous trends
-)
-
-# 1. Create a sample dataset based on Table 11.10 (Greenhouse Stand)
-# (Showing just the first few blocks for brevity, but the function handles the whole dataset)
-df <- data.frame(
-  Block = rep(1:6, each = 8),
-  Treatment = rep(c("A", "B", "C", "D", "E", "F", "G", "H"), times = 6),
-  Stand = c(8, 16, 14, 10, 8, 8, 7, 12,  # Block 1
-            8, 19, 16, 11, 7, 8, 6, 19,  # Block 2
-            9, 24, 14, 12, 1, 3, 6, 9,   # Block 3
-            7, 22, 13, 8,  1, 3, 6, 11,  # Block 4
-            7, 19, 14, 7,  3, 3, 4, 9,   # Block 5
-            5, 19, 13, 3,  2, 7, 4, 5)   # Block 6
-)
-
-# 2. Define the Orthogonal Contrasts based on Table 11.11
-# Ensure the order matches the alphabetical levels of the Treatment factor (A, B, C, D, E, F, G, H)
-my_contrasts <- list(
-  "1: A vs rest"      = c(-7,  1,  1,  1,  1,  1,  1,  1),
-  "2: BC vs DEFGH"    = c( 0,  5,  5, -2, -2, -2, -2, -2),
-  "3: B vs C"         = c( 0,  1, -1,  0,  0,  0,  0,  0),
-  "4: DH vs EFG"      = c( 0,  0,  0,  3, -2, -2, -2,  3),
-  "5: D vs H"         = c( 0,  0,  0,  1,  0,  0,  0, -1),
-  "6: E vs FG"        = c( 0,  0,  0,  0,  2, -1, -1,  0),
-  "7: F vs G"         = c( 0,  0,  0,  0,  0,  1, -1,  0)
-)
-
-# 3. Run the function
-# We will ask for the contrasts defined above, plus an LSD test.
-analysis_results <- analyze_rcbd_contrast(
-  data = df,
-  response = "Stand",
-  block = "Block",
-  treatments = c("Treatment"), # Single factor here. For two-factor, use c("Factor1", "Factor2")
-  contrast_matrix = my_contrasts,
-  post_hoc = "LSD"
-)
+# # Example Usage for Table 11.14 (Polynomial Partitioning)
+# # 1. Create the dataset (Table 11.14)
+# yield_data <- data.frame(
+#   Block = rep(1:6, each = 5),
+#   Spacing = rep(c(18, 24, 30, 36, 42), times = 6),
+#   Yield = c(
+#     33.6, 31.1, 33.0, 28.4, 31.4,
+#     37.1, 34.5, 29.5, 29.9, 28.3,
+#     34.1, 30.5, 29.2, 31.6, 28.9,
+#     34.6, 32.7, 30.7, 32.3, 28.6,
+#     35.4, 30.7, 30.7, 28.1, 29.6,  # Note: 29.6 is the estimated missing plot
+#     36.1, 30.3, 27.9, 26.9, 33.4
+#   )
+# )
+# 
+# # 2. Define the exact polynomial contrast matrix (columns = degrees)
+# poly_matrix <- cbind(
+#   Linear    = c(-2, -1,  0,  1,  2),
+#   Quadratic = c( 2, -1, -2, -1,  2),
+#   Cubic     = c(-1,  2,  0, -2,  1),
+#   Quartic   = c( 1, -4,  6, -4,  1)
+# )
+# 
+# # 3. Run the updated function
+# analysis_results <- analyze_rcbd_contrast(
+#   data = yield_data,
+#   response = "Yield",
+#   block = "Block",
+#   treatments = c("Spacing"),
+#   contrast_matrix = poly_matrix,         # Pass the matrix here
+#   poly_split = list(                     # Map matrix columns to the split output
+#     Linear = 1, 
+#     Quadratic = 2, 
+#     Cubic = 3, 
+#     Quartic = 4
+#   ),
+#   post_hoc = "none" # Skipping LSD since we are looking at continuous trends
+# )
+# 
+# # 1. Create a sample dataset based on Table 11.10 (Greenhouse Stand)
+# # (Showing just the first few blocks for brevity, but the function handles the whole dataset)
+# df <- data.frame(
+#   Block = rep(1:6, each = 8),
+#   Treatment = rep(c("A", "B", "C", "D", "E", "F", "G", "H"), times = 6),
+#   Stand = c(8, 16, 14, 10, 8, 8, 7, 12,  # Block 1
+#             8, 19, 16, 11, 7, 8, 6, 19,  # Block 2
+#             9, 24, 14, 12, 1, 3, 6, 9,   # Block 3
+#             7, 22, 13, 8,  1, 3, 6, 11,  # Block 4
+#             7, 19, 14, 7,  3, 3, 4, 9,   # Block 5
+#             5, 19, 13, 3,  2, 7, 4, 5)   # Block 6
+# )
+# 
+# # 2. Define the Orthogonal Contrasts based on Table 11.11
+# # Ensure the order matches the alphabetical levels of the Treatment factor (A, B, C, D, E, F, G, H)
+# my_contrasts <- list(
+#   "1: A vs rest"      = c(-7,  1,  1,  1,  1,  1,  1,  1),
+#   "2: BC vs DEFGH"    = c( 0,  5,  5, -2, -2, -2, -2, -2),
+#   "3: B vs C"         = c( 0,  1, -1,  0,  0,  0,  0,  0),
+#   "4: DH vs EFG"      = c( 0,  0,  0,  3, -2, -2, -2,  3),
+#   "5: D vs H"         = c( 0,  0,  0,  1,  0,  0,  0, -1),
+#   "6: E vs FG"        = c( 0,  0,  0,  0,  2, -1, -1,  0),
+#   "7: F vs G"         = c( 0,  0,  0,  0,  0,  1, -1,  0)
+# )
+# 
+# # 3. Run the function
+# # We will ask for the contrasts defined above, plus an LSD test.
+# analysis_results <- analyze_rcbd_contrast(
+#   data = df,
+#   response = "Stand",
+#   block = "Block",
+#   treatments = c("Treatment"), # Single factor here. For two-factor, use c("Factor1", "Factor2")
+#   contrast_matrix = my_contrasts,
+#   post_hoc = "LSD"
+# )

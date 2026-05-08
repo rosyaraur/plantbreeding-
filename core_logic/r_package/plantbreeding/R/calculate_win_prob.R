@@ -161,44 +161,44 @@ plot_trial_results <- function(data, results, yield_col, variety_col, facet_col 
 }
 
 
-# ==============================================================================
-# PART 5: EXECUTION AND VISUALIZATION
-# ==============================================================================
-
-# Run the analysis
-results <- calculate_win_prob(
-  data = farm_trials,
-  yield_col = "Yield_bu_ac",
-  variety_col = "Genotype",
-  new_line = "Experimental_X1",
-  farmer_line = "Standard_Check",
-  env_classes = c("Soil_Texture", "Irrigation_Status") 
-)
-
-# Plot overall results and display in R viewer
-overall_plot <- plot_trial_results(farm_trials, results, "Yield_bu_ac", "Genotype")
-print(overall_plot)
-
-# Create spatial map
-variety_palette <- colorFactor(palette = c("#E69F00", "#56B4E9"), domain = farm_trials$Genotype)
-
-agronomic_map <- leaflet(data = farm_trials) %>%
-  addProviderTiles(providers$CartoDB.Positron) %>%
-  addCircleMarkers(
-    lng = ~Longitude, lat = ~Latitude,
-    color = ~variety_palette(Genotype), fillOpacity = 0.7, stroke = TRUE, weight = 1,
-    radius = ~Yield_bu_ac / 20, 
-    popup = ~paste0(
-      "<b>Farm ID:</b> ", Farm_ID, "<br/>",
-      "<b>Variety:</b> ", Genotype, "<br/>",
-      "<b>Yield:</b> <span style='color:green'>", Yield_bu_ac, " bu/ac</span><br/><hr/>",
-      "<b>Soil:</b> ", Soil_Texture, "<br/>",
-      "<b>Water:</b> ", Irrigation_Status, "<br/>",
-      "<b>Rainfall:</b> ", Rainfall_mm, " mm<br/>",
-      "<b>GDUs:</b> ", GDU
-    )
-  ) %>%
-  addLegend("bottomright", pal = variety_palette, values = ~Genotype, title = "Planted Variety", opacity = 1)
-
-# Display the map
-agronomic_map
+# # ==============================================================================
+# # PART 5: EXECUTION AND VISUALIZATION
+# # ==============================================================================
+# 
+# # Run the analysis
+# results <- calculate_win_prob(
+#   data = farm_trials,
+#   yield_col = "Yield_bu_ac",
+#   variety_col = "Genotype",
+#   new_line = "Experimental_X1",
+#   farmer_line = "Standard_Check",
+#   env_classes = c("Soil_Texture", "Irrigation_Status") 
+# )
+# 
+# # Plot overall results and display in R viewer
+# overall_plot <- plot_trial_results(farm_trials, results, "Yield_bu_ac", "Genotype")
+# print(overall_plot)
+# 
+# # Create spatial map
+# variety_palette <- colorFactor(palette = c("#E69F00", "#56B4E9"), domain = farm_trials$Genotype)
+# 
+# agronomic_map <- leaflet(data = farm_trials) %>%
+#   addProviderTiles(providers$CartoDB.Positron) %>%
+#   addCircleMarkers(
+#     lng = ~Longitude, lat = ~Latitude,
+#     color = ~variety_palette(Genotype), fillOpacity = 0.7, stroke = TRUE, weight = 1,
+#     radius = ~Yield_bu_ac / 20, 
+#     popup = ~paste0(
+#       "<b>Farm ID:</b> ", Farm_ID, "<br/>",
+#       "<b>Variety:</b> ", Genotype, "<br/>",
+#       "<b>Yield:</b> <span style='color:green'>", Yield_bu_ac, " bu/ac</span><br/><hr/>",
+#       "<b>Soil:</b> ", Soil_Texture, "<br/>",
+#       "<b>Water:</b> ", Irrigation_Status, "<br/>",
+#       "<b>Rainfall:</b> ", Rainfall_mm, " mm<br/>",
+#       "<b>GDUs:</b> ", GDU
+#     )
+#   ) %>%
+#   addLegend("bottomright", pal = variety_palette, values = ~Genotype, title = "Planted Variety", opacity = 1)
+# 
+# # Display the map
+# agronomic_map

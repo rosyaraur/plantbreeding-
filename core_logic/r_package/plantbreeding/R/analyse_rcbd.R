@@ -142,23 +142,23 @@ analyze_rcbd <- function(df, treatment_col, block_col, response_col, control_val
 # EXECUTION WITH YOUR DATA
 # ==============================================================================
 
-rice_data <- data.frame(
-  Treatment = rep(c(25, 50, 75, 100, 125, 150), each = 4),
-  Rep = rep(c("I", "II", "III", "IV"), times = 6),
-  Yield = c(
-    3113, 3398, 3307, 3678,  
-    5346, 5952, 4719, 4264,  
-    5272, 5713, 5483, 4749,  
-    5164, 4831, 4986, 4410,  
-    4804, 4848, 4432, 4748,  
-    6254, 6542, 6919, 6098   
-  )
-)
-
-results <- analyze_rcbd(
-  df = rice_data, 
-  treatment_col = "Treatment", 
-  block_col = "Rep", 
-  response_col = "Yield", 
-  control_val = "25"
-)
+# rice_data <- data.frame(
+#   Treatment = rep(c(25, 50, 75, 100, 125, 150), each = 4),
+#   Rep = rep(c("I", "II", "III", "IV"), times = 6),
+#   Yield = c(
+#     3113, 3398, 3307, 3678,  
+#     5346, 5952, 4719, 4264,  
+#     5272, 5713, 5483, 4749,  
+#     5164, 4831, 4986, 4410,  
+#     4804, 4848, 4432, 4748,  
+#     6254, 6542, 6919, 6098   
+#   )
+# )
+# 
+# results <- analyze_rcbd(
+#   df = rice_data, 
+#   treatment_col = "Treatment", 
+#   block_col = "Rep", 
+#   response_col = "Yield", 
+#   control_val = "25"
+# )

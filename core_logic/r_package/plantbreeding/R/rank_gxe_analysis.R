@@ -124,59 +124,59 @@ rank_gxe_analysis <- function(df, gen_col, env_col, trait_col) {
   return(stability_metrics)
 }
 
-# test cases 
-
-set.seed(123) # For reproducibility
-
-n_G <- 20
-n_E <- 8
-mu <- 100 # Base yield
-
-# Generate Main Effects
-G_effects <- seq(-15, 15, length.out = n_G) # Genotype effects
-E_effects <- seq(-30, 30, length.out = n_E) # Environment effects
-
-# Base grid
-sim_grid <- expand.grid(Genotype = paste0("G", sprintf("%02d", 1:n_G)), 
-                        Environment = paste0("E", 1:n_E))
-sim_grid$G_eff <- rep(G_effects, times = n_E)
-sim_grid$E_eff <- rep(E_effects, each = n_G)
-
-# --- Dataset 1: High Scale (Non-crossover) GxE ---
-# Interaction is a multiplier of the genotypic effect based on environment quality
-scale_factors <- runif(n_E, min = 0.5, max = 2.0)
-df_scale <- sim_grid %>%
-  mutate(
-    Env_Scale = rep(scale_factors, each = n_G),
-    GE_eff = G_eff * Env_Scale - G_eff, # Scale expansion
-    Error = rnorm(n(), mean = 0, sd = 2), # Low noise
-    Yield = mu + G_eff + E_eff + GE_eff + Error
-  )
-
-# --- Dataset 2: High Crossover GxE ---
-# Random GE effects that are much larger than G main effects
-df_crossover <- sim_grid %>%
-  mutate(
-    GE_eff = rnorm(n(), mean = 0, sd = 25), # High SD causes rank inversions
-    Error = rnorm(n(), mean = 0, sd = 2),
-    Yield = mu + G_eff + E_eff + GE_eff + Error
-  )
-
-# --- Dataset 3: Medium GxE ---
-# Random GE effects roughly equal to G main effects
-df_medium <- sim_grid %>%
-  mutate(
-    GE_eff = rnorm(n(), mean = 0, sd = 8), 
-    Error = rnorm(n(), mean = 0, sd = 2),
-    Yield = mu + G_eff + E_eff + GE_eff + Error
-  )
-
-# Execute Analysis
-res_scale <- rank_gxe_analysis(df_scale, "Genotype", "Environment", "Yield")
-res_crossover <- rank_gxe_analysis(df_crossover, "Genotype", "Environment", "Yield")
-res_medium <- rank_gxe_analysis(df_medium, "Genotype", "Environment", "Yield")
-
-# Examine Top 5 genotypes selected by Kang's Rank-Sum in each scenario
-head(res_scale, 5)
-head(res_crossover, 5)
-head(res_medium, 5)
+# # test cases 
+# 
+# set.seed(123) # For reproducibility
+# 
+# n_G <- 20
+# n_E <- 8
+# mu <- 100 # Base yield
+# 
+# # Generate Main Effects
+# G_effects <- seq(-15, 15, length.out = n_G) # Genotype effects
+# E_effects <- seq(-30, 30, length.out = n_E) # Environment effects
+# 
+# # Base grid
+# sim_grid <- expand.grid(Genotype = paste0("G", sprintf("%02d", 1:n_G)), 
+#                         Environment = paste0("E", 1:n_E))
+# sim_grid$G_eff <- rep(G_effects, times = n_E)
+# sim_grid$E_eff <- rep(E_effects, each = n_G)
+# 
+# # --- Dataset 1: High Scale (Non-crossover) GxE ---
+# # Interaction is a multiplier of the genotypic effect based on environment quality
+# scale_factors <- runif(n_E, min = 0.5, max = 2.0)
+# df_scale <- sim_grid %>%
+#   mutate(
+#     Env_Scale = rep(scale_factors, each = n_G),
+#     GE_eff = G_eff * Env_Scale - G_eff, # Scale expansion
+#     Error = rnorm(n(), mean = 0, sd = 2), # Low noise
+#     Yield = mu + G_eff + E_eff + GE_eff + Error
+#   )
+# 
+# # --- Dataset 2: High Crossover GxE ---
+# # Random GE effects that are much larger than G main effects
+# df_crossover <- sim_grid %>%
+#   mutate(
+#     GE_eff = rnorm(n(), mean = 0, sd = 25), # High SD causes rank inversions
+#     Error = rnorm(n(), mean = 0, sd = 2),
+#     Yield = mu + G_eff + E_eff + GE_eff + Error
+#   )
+# 
+# # --- Dataset 3: Medium GxE ---
+# # Random GE effects roughly equal to G main effects
+# df_medium <- sim_grid %>%
+#   mutate(
+#     GE_eff = rnorm(n(), mean = 0, sd = 8), 
+#     Error = rnorm(n(), mean = 0, sd = 2),
+#     Yield = mu + G_eff + E_eff + GE_eff + Error
+#   )
+# 
+# # Execute Analysis
+# res_scale <- rank_gxe_analysis(df_scale, "Genotype", "Environment", "Yield")
+# res_crossover <- rank_gxe_analysis(df_crossover, "Genotype", "Environment", "Yield")
+# res_medium <- rank_gxe_analysis(df_medium, "Genotype", "Environment", "Yield")
+# 
+# # Examine Top 5 genotypes selected by Kang's Rank-Sum in each scenario
+# head(res_scale, 5)
+# head(res_crossover, 5)
+# head(res_medium, 5)

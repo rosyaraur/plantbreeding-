@@ -92,69 +92,69 @@ verify_biparental_progeny <- function(p1_vector, p2_vector, population_matrix, g
   ))
 }
 
-# =====================================================================
-# SIMULATION & DEMONSTRATION
-# =====================================================================
-set.seed(42)
-n_markers <- 5000
-
-cat("Simulating Parent 1 and Parent 2 (40% divergence)...\n")
-p1 <- sample(c(0, 2), size = n_markers, replace = TRUE)
-is_diff <- runif(n_markers) < 0.40
-p2 <- ifelse(is_diff, ifelse(p1 == 0, 2, 0), p1)
-n_seg <- sum(is_diff)
-
-# Helper function to generate progenies for a specific generation
-generate_progeny <- function(n_ind, generation) {
-  mat <- matrix(rep(p1, each = n_ind), nrow = n_ind, byrow = FALSE)
-  het_prob <- (1/2)^(generation - 1)
-  hom_prob <- (1 - het_prob) / 2
-  probs <- c(hom_prob, het_prob, hom_prob)
-  
-  seg_matrix <- matrix(sample(c(0, 1, 2), size = n_ind * n_seg, replace = TRUE, prob = probs), 
-                       nrow = n_ind, ncol = n_seg)
-  
-  p1_seg <- matrix(p1[is_diff], nrow = n_ind, ncol = n_seg, byrow = TRUE)
-  p2_seg <- matrix(p2[is_diff], nrow = n_ind, ncol = n_seg, byrow = TRUE)
-  mat[, is_diff] <- p1_seg + seg_matrix * (p2_seg - p1_seg) / 2
-  return(mat)
-}
-
-# --- 1. Build the Matrix ---
-cat("Injecting errors: 5 True F6s, 1 F2 Mix-up, 1 P1 Self, 1 Unrelated...\n\n")
-
-# A. 5 True F6s
-f6_lines <- generate_progeny(5, generation = 6)
-rownames(f6_lines) <- paste0("True_F6_", 1:5)
-
-# B. 1 F2 Line (Seed mix-up from an earlier generation)
-f2_line <- generate_progeny(1, generation = 2)
-rownames(f2_line) <- "Error_F2_MixUp"
-
-# C. 1 Accidental Self of P1 (with 0.1% mutation/seq error)
-p1_self <- p1
-muts <- runif(n_markers) < 0.001
-p1_self[muts] <- (p1_self[muts] + 1) %% 3
-p1_self <- matrix(p1_self, nrow = 1)
-rownames(p1_self) <- "Error_P1_Self"
-
-# D. 1 Unrelated Line
-unrelated <- sample(c(0, 2), size = n_markers, replace = TRUE)
-unrelated <- matrix(unrelated, nrow = 1)
-rownames(unrelated) <- "Error_Unrelated"
-
-population_matrix <- rbind(f6_lines, f2_line, p1_self, unrelated)
-
-# --- 2. Run the Verification ---
-results <- verify_biparental_progeny(p1, p2, population_matrix, generation = 6, alpha = 0.01)
-
-# --- 3. View Results ---
-cat("--- Genomic Architecture ---\n")
-print(results$Loci)
-cat("\n--- Expected F6 Target Ratios ---\n")
-print(round(results$Expected, 4))
-cat("\n--- Verification Calls ---\n")
-print(results$Calls)
+# # =====================================================================
+# # SIMULATION & DEMONSTRATION
+# # =====================================================================
+# set.seed(42)
+# n_markers <- 5000
+# 
+# cat("Simulating Parent 1 and Parent 2 (40% divergence)...\n")
+# p1 <- sample(c(0, 2), size = n_markers, replace = TRUE)
+# is_diff <- runif(n_markers) < 0.40
+# p2 <- ifelse(is_diff, ifelse(p1 == 0, 2, 0), p1)
+# n_seg <- sum(is_diff)
+# 
+# # Helper function to generate progenies for a specific generation
+# generate_progeny <- function(n_ind, generation) {
+#   mat <- matrix(rep(p1, each = n_ind), nrow = n_ind, byrow = FALSE)
+#   het_prob <- (1/2)^(generation - 1)
+#   hom_prob <- (1 - het_prob) / 2
+#   probs <- c(hom_prob, het_prob, hom_prob)
+#   
+#   seg_matrix <- matrix(sample(c(0, 1, 2), size = n_ind * n_seg, replace = TRUE, prob = probs), 
+#                        nrow = n_ind, ncol = n_seg)
+#   
+#   p1_seg <- matrix(p1[is_diff], nrow = n_ind, ncol = n_seg, byrow = TRUE)
+#   p2_seg <- matrix(p2[is_diff], nrow = n_ind, ncol = n_seg, byrow = TRUE)
+#   mat[, is_diff] <- p1_seg + seg_matrix * (p2_seg - p1_seg) / 2
+#   return(mat)
+# }
+# 
+# # --- 1. Build the Matrix ---
+# cat("Injecting errors: 5 True F6s, 1 F2 Mix-up, 1 P1 Self, 1 Unrelated...\n\n")
+# 
+# # A. 5 True F6s
+# f6_lines <- generate_progeny(5, generation = 6)
+# rownames(f6_lines) <- paste0("True_F6_", 1:5)
+# 
+# # B. 1 F2 Line (Seed mix-up from an earlier generation)
+# f2_line <- generate_progeny(1, generation = 2)
+# rownames(f2_line) <- "Error_F2_MixUp"
+# 
+# # C. 1 Accidental Self of P1 (with 0.1% mutation/seq error)
+# p1_self <- p1
+# muts <- runif(n_markers) < 0.001
+# p1_self[muts] <- (p1_self[muts] + 1) %% 3
+# p1_self <- matrix(p1_self, nrow = 1)
+# rownames(p1_self) <- "Error_P1_Self"
+# 
+# # D. 1 Unrelated Line
+# unrelated <- sample(c(0, 2), size = n_markers, replace = TRUE)
+# unrelated <- matrix(unrelated, nrow = 1)
+# rownames(unrelated) <- "Error_Unrelated"
+# 
+# population_matrix <- rbind(f6_lines, f2_line, p1_self, unrelated)
+# 
+# # --- 2. Run the Verification ---
+# results <- verify_biparental_progeny(p1, p2, population_matrix, generation = 6, alpha = 0.01)
+# 
+# # --- 3. View Results ---
+# cat("--- Genomic Architecture ---\n")
+# print(results$Loci)
+# cat("\n--- Expected F6 Target Ratios ---\n")
+# print(round(results$Expected, 4))
+# cat("\n--- Verification Calls ---\n")
+# print(results$Calls)
 
 
 #' @title Evaluate Marker Density Adequacy via Downsampling
@@ -247,42 +247,42 @@ evaluate_marker_adequacy <- function(p1_vector, p2_vector, population_matrix,
   return(final_df)
 }
 
-# =====================================================================
-# SIMULATION & DEMONSTRATION
-# =====================================================================
-set.seed(42)
-total_markers <- 5000
-n_lines <- 100
-
-cat("Simulating a high-density matrix of 100 True F6 lines (5000 markers)...\n\n")
-
-# 1. Generate Parents (40% divergence)
-p1 <- sample(c(0, 2), size = total_markers, replace = TRUE)
-is_diff <- runif(total_markers) < 0.40
-p2 <- ifelse(is_diff, ifelse(p1 == 0, 2, 0), p1)
-n_seg <- sum(is_diff)
-
-# 2. Build the Population Matrix
-population_matrix <- matrix(rep(p1, each = n_lines), nrow = n_lines, byrow = FALSE)
-f6_probs <- c(0.484375, 0.03125, 0.484375)
-seg_matrix <- matrix(sample(c(0, 1, 2), size = n_lines * n_seg, replace = TRUE, prob = f6_probs), 
-                     nrow = n_lines, ncol = n_seg)
-p1_seg <- matrix(p1[is_diff], nrow = n_lines, ncol = n_seg, byrow = TRUE)
-p2_seg <- matrix(p2[is_diff], nrow = n_lines, ncol = n_seg, byrow = TRUE)
-population_matrix[, is_diff] <- p1_seg + seg_matrix * (p2_seg - p1_seg) / 2
-
-# 3. Run the Downsampling Adequacy Analysis
-# We want to know if we can drop down to 30, 100, 300, or 1000 markers.
-densities_to_test <- c(30, 100, 300, 1000, 5000)
-
-adequacy_report <- evaluate_marker_adequacy(
-  p1_vector = p1, 
-  p2_vector = p2, 
-  population_matrix = population_matrix, 
-  target_densities = densities_to_test,
-  target_z_score = 4.0 # We want 4 standard deviations of separation
-)
-
-# 4. View Results
-cat("--- Marker Adequacy Downsampling Report ---\n")
-print(adequacy_report)
+# # =====================================================================
+# # SIMULATION & DEMONSTRATION
+# # =====================================================================
+# set.seed(42)
+# total_markers <- 5000
+# n_lines <- 100
+# 
+# cat("Simulating a high-density matrix of 100 True F6 lines (5000 markers)...\n\n")
+# 
+# # 1. Generate Parents (40% divergence)
+# p1 <- sample(c(0, 2), size = total_markers, replace = TRUE)
+# is_diff <- runif(total_markers) < 0.40
+# p2 <- ifelse(is_diff, ifelse(p1 == 0, 2, 0), p1)
+# n_seg <- sum(is_diff)
+# 
+# # 2. Build the Population Matrix
+# population_matrix <- matrix(rep(p1, each = n_lines), nrow = n_lines, byrow = FALSE)
+# f6_probs <- c(0.484375, 0.03125, 0.484375)
+# seg_matrix <- matrix(sample(c(0, 1, 2), size = n_lines * n_seg, replace = TRUE, prob = f6_probs), 
+#                      nrow = n_lines, ncol = n_seg)
+# p1_seg <- matrix(p1[is_diff], nrow = n_lines, ncol = n_seg, byrow = TRUE)
+# p2_seg <- matrix(p2[is_diff], nrow = n_lines, ncol = n_seg, byrow = TRUE)
+# population_matrix[, is_diff] <- p1_seg + seg_matrix * (p2_seg - p1_seg) / 2
+# 
+# # 3. Run the Downsampling Adequacy Analysis
+# # We want to know if we can drop down to 30, 100, 300, or 1000 markers.
+# densities_to_test <- c(30, 100, 300, 1000, 5000)
+# 
+# adequacy_report <- evaluate_marker_adequacy(
+#   p1_vector = p1, 
+#   p2_vector = p2, 
+#   population_matrix = population_matrix, 
+#   target_densities = densities_to_test,
+#   target_z_score = 4.0 # We want 4 standard deviations of separation
+# )
+# 
+# # 4. View Results
+# cat("--- Marker Adequacy Downsampling Report ---\n")
+# print(adequacy_report)

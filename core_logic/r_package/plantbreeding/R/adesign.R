@@ -169,22 +169,22 @@ adesign_inventory <- function(locations_file, genotypes_file, seed = 999, max_re
   ))
 }
 
-# Run the function
-results <- adesign_inventory(
-  locations_file = "~/Downloads/locations_parameters.csv", 
-  genotypes_file = "~/Downloads/genotypes_parameters.csv",
-  seed = 42,
-  max_reps_per_loc_lines = 1
-)
-
-# 1. Access the main field plan (for export to Prism or SAS)
-head(results$TrialPlan)
-
-# 2. Check which lines have seed leftover for future nurseries
-print(results$RemainingInventory)
-
-# 3. Review the environment-by-environment allocation matrix
-print(results$Summary)
+# # Run the function
+# results <- adesign_inventory(
+#   locations_file = "~/Downloads/locations_parameters.csv", 
+#   genotypes_file = "~/Downloads/genotypes_parameters.csv",
+#   seed = 42,
+#   max_reps_per_loc_lines = 1
+# )
+# 
+# # 1. Access the main field plan (for export to Prism or SAS)
+# head(results$TrialPlan)
+# 
+# # 2. Check which lines have seed leftover for future nurseries
+# print(results$RemainingInventory)
+# 
+# # 3. Review the environment-by-environment allocation matrix
+# print(results$Summary)
 
 
 

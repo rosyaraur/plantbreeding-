@@ -145,102 +145,102 @@ plot_distance_heatmap <- function(dist_obj, title = "Pairwise Genetic Distance M
   return(p)
 }
 
-# Execution Pipeline: How to put it all together
-# 1. Load your datasets
-geno_df <- read.csv("~/Documents/githubdir/plantbreeding-/package1.0/plantbreeding/data/rice44K.csv", stringsAsFactors = FALSE)
-disp_df <- read.csv("~/Documents/githubdir/plantbreeding-/package1.0/plantbreeding/data/rice44Kdisp.csv", stringsAsFactors = FALSE)
-
-# 2. Extract population assignments dynamically
-sample_ids <- gsub("NSFTV_", "", colnames(geno_df)[-c(1:3)])
-pop_assignments <- disp_df$Sub.population[match(sample_ids, disp_df$NSFTV.ID)]
-
-# 3. Calculate Nei's Distance
-# Note: You can switch method = "Nei" to method = "Euclidean"
-nei_dist <- calculate_genetic_distance(data = geno_df, 
-                                       meta_cols = 3, 
-                                       pop_assignments = pop_assignments, 
-                                       method = "Nei")
-
-# 4. Generate the Visualizations
-
-# A. Display the Dendrogram (Plots directly to the R Viewer)
-plot_distance_dendrogram(nei_dist, title = "Rice Subpopulations: Nei's Distance")
-
-# B. Generate and display the PCoA
-pcoa_plot <- plot_distance_pcoa(nei_dist, title = "PCoA: Rice Subpopulations")
-print(pcoa_plot)
-
-# C. Generate and display the Heatmap
-heatmap_plot <- plot_distance_heatmap(nei_dist, title = "Nei's Distance Matrix")
-print(heatmap_plot)
-
-# plot invidual level diversity 
-# Load required libraries
-library(ggplot2)
-library(dplyr)
-
-# 2. Prepare the Genotype Matrix
-# Drop the metadata columns (id, chr, position) so only genotype calls remain
-geno_data <- geno_df[, -c(1:3)]
-
-# Transpose the data: prcomp() requires individuals to be ROWS and markers to be COLUMNS
-geno_matrix <- t(geno_data)
-
-# Extract sample IDs from the new rownames (e.g., "NSFTV_1" -> "1")
-sample_ids <- gsub("NSFTV_", "", rownames(geno_matrix))
-
-# 3. Match Subpopulations
-# Look up the subpopulation for each individual based on the descriptor file
-sub_pops <- disp_df$Sub.population[match(sample_ids, disp_df$NSFTV.ID)]
-
-# Replace any missing or empty assignments with "Unknown"
-sub_pops[is.na(sub_pops) | sub_pops == ""] <- "Unknown"
-
-# 4. Perform Principal Component Analysis (PCA)
-print("Running PCA across 44K markers... this may take a few seconds.")
-# We center the data (standard practice), but do not scale it for 1/-1 encoded SNPs
-pca_res <- prcomp(geno_matrix, center = TRUE, scale. = FALSE)
-
-# 5. Extract Results
-# Calculate the percentage of total genetic variance explained by the first two axes
-var_explained <- round(pca_res$sdev^2 / sum(pca_res$sdev^2) * 100, 1)
-
-# Create a clean dataframe for ggplot
-pca_df <- data.frame(
-  Sample = rownames(geno_matrix),
-  Subpopulation = sub_pops,
-  PC1 = pca_res$x[, 1],
-  PC2 = pca_res$x[, 2]
-)
-
-# 6. Plot the Data
-p_pca <- ggplot(pca_df, aes(x = PC1, y = PC2, color = Subpopulation)) +
-  # Plot the individual dots
-  geom_point(size = 3, alpha = 0.8) +
-  
-  # Add confidence ellipses around each subpopulation (helps visualize the clusters)
-  stat_ellipse(level = 0.95, linetype = 2, linewidth = 0.6) +
-  
-  # Styling and labels
-  theme_minimal() +
-  labs(
-    title = "Genetic Structure of Individual Rice Accessions",
-    subtitle = "Based on 44K SNP array",
-    x = paste0("Principal Component 1 (", var_explained[1], "% variance)"),
-    y = paste0("Principal Component 2 (", var_explained[2], "% variance)"),
-    color = "Subpopulation"
-  ) +
-  theme(
-    legend.position = "right",
-    plot.title = element_text(face = "bold", size = 15),
-    axis.title = element_text(face = "bold"),
-    panel.border = element_rect(color = "black", fill = NA, size = 0.5)
-  ) +
-  # Use a distinct, colorblind-friendly palette
-  scale_color_brewer(palette = "Set1")
-
-# Display the plot
-print(p_pca)
-
-# Save the plot as a high-resolution PNG
-ggsave("PCA_Individuals_by_Subpop.png", plot = p_pca, width = 9, height = 7, dpi = 300)
+# # Execution Pipeline: How to put it all together
+# # 1. Load your datasets
+# geno_df <- read.csv("~/Documents/githubdir/plantbreeding-/package1.0/plantbreeding/data/rice44K.csv", stringsAsFactors = FALSE)
+# disp_df <- read.csv("~/Documents/githubdir/plantbreeding-/package1.0/plantbreeding/data/rice44Kdisp.csv", stringsAsFactors = FALSE)
+# 
+# # 2. Extract population assignments dynamically
+# sample_ids <- gsub("NSFTV_", "", colnames(geno_df)[-c(1:3)])
+# pop_assignments <- disp_df$Sub.population[match(sample_ids, disp_df$NSFTV.ID)]
+# 
+# # 3. Calculate Nei's Distance
+# # Note: You can switch method = "Nei" to method = "Euclidean"
+# nei_dist <- calculate_genetic_distance(data = geno_df, 
+#                                        meta_cols = 3, 
+#                                        pop_assignments = pop_assignments, 
+#                                        method = "Nei")
+# 
+# # 4. Generate the Visualizations
+# 
+# # A. Display the Dendrogram (Plots directly to the R Viewer)
+# plot_distance_dendrogram(nei_dist, title = "Rice Subpopulations: Nei's Distance")
+# 
+# # B. Generate and display the PCoA
+# pcoa_plot <- plot_distance_pcoa(nei_dist, title = "PCoA: Rice Subpopulations")
+# print(pcoa_plot)
+# 
+# # C. Generate and display the Heatmap
+# heatmap_plot <- plot_distance_heatmap(nei_dist, title = "Nei's Distance Matrix")
+# print(heatmap_plot)
+# 
+# # plot invidual level diversity 
+# # Load required libraries
+# library(ggplot2)
+# library(dplyr)
+# 
+# # 2. Prepare the Genotype Matrix
+# # Drop the metadata columns (id, chr, position) so only genotype calls remain
+# geno_data <- geno_df[, -c(1:3)]
+# 
+# # Transpose the data: prcomp() requires individuals to be ROWS and markers to be COLUMNS
+# geno_matrix <- t(geno_data)
+# 
+# # Extract sample IDs from the new rownames (e.g., "NSFTV_1" -> "1")
+# sample_ids <- gsub("NSFTV_", "", rownames(geno_matrix))
+# 
+# # 3. Match Subpopulations
+# # Look up the subpopulation for each individual based on the descriptor file
+# sub_pops <- disp_df$Sub.population[match(sample_ids, disp_df$NSFTV.ID)]
+# 
+# # Replace any missing or empty assignments with "Unknown"
+# sub_pops[is.na(sub_pops) | sub_pops == ""] <- "Unknown"
+# 
+# # 4. Perform Principal Component Analysis (PCA)
+# print("Running PCA across 44K markers... this may take a few seconds.")
+# # We center the data (standard practice), but do not scale it for 1/-1 encoded SNPs
+# pca_res <- prcomp(geno_matrix, center = TRUE, scale. = FALSE)
+# 
+# # 5. Extract Results
+# # Calculate the percentage of total genetic variance explained by the first two axes
+# var_explained <- round(pca_res$sdev^2 / sum(pca_res$sdev^2) * 100, 1)
+# 
+# # Create a clean dataframe for ggplot
+# pca_df <- data.frame(
+#   Sample = rownames(geno_matrix),
+#   Subpopulation = sub_pops,
+#   PC1 = pca_res$x[, 1],
+#   PC2 = pca_res$x[, 2]
+# )
+# 
+# # 6. Plot the Data
+# p_pca <- ggplot(pca_df, aes(x = PC1, y = PC2, color = Subpopulation)) +
+#   # Plot the individual dots
+#   geom_point(size = 3, alpha = 0.8) +
+#   
+#   # Add confidence ellipses around each subpopulation (helps visualize the clusters)
+#   stat_ellipse(level = 0.95, linetype = 2, linewidth = 0.6) +
+#   
+#   # Styling and labels
+#   theme_minimal() +
+#   labs(
+#     title = "Genetic Structure of Individual Rice Accessions",
+#     subtitle = "Based on 44K SNP array",
+#     x = paste0("Principal Component 1 (", var_explained[1], "% variance)"),
+#     y = paste0("Principal Component 2 (", var_explained[2], "% variance)"),
+#     color = "Subpopulation"
+#   ) +
+#   theme(
+#     legend.position = "right",
+#     plot.title = element_text(face = "bold", size = 15),
+#     axis.title = element_text(face = "bold"),
+#     panel.border = element_rect(color = "black", fill = NA, size = 0.5)
+#   ) +
+#   # Use a distinct, colorblind-friendly palette
+#   scale_color_brewer(palette = "Set1")
+# 
+# # Display the plot
+# print(p_pca)
+# 
+# # Save the plot as a high-resolution PNG
+# ggsave("PCA_Individuals_by_Subpop.png", plot = p_pca, width = 9, height = 7, dpi = 300)

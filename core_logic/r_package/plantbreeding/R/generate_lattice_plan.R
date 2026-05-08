@@ -144,16 +144,16 @@ generate_lattice_plan <- function(lines, checks, n_locs = 2, n_reps = 2, k) {
 # ==========================================
 
 # 24 Total Treatments
-my_lines <- paste0("L-", 1:22)
-my_checks <- c("CHK-1", "CHK-2")
-
-# Run the lattice generator
-# We have 24 treatments. We can use an incomplete block size (k) of 4.
-# This results in s = 6 incomplete blocks per full replication.
-lattice_trial <- generate_lattice_plan(
-  lines = my_lines, 
-  checks = my_checks, 
-  n_locs = 2,             # 2 environments
-  n_reps = 2,             # 2 full replications per environment
-  k = 4                   # 4 plots per incomplete block
-)
+# my_lines <- paste0("L-", 1:22)
+# my_checks <- c("CHK-1", "CHK-2")
+# 
+# # Run the lattice generator
+# # We have 24 treatments. We can use an incomplete block size (k) of 4.
+# # This results in s = 6 incomplete blocks per full replication.
+# lattice_trial <- generate_lattice_plan(
+#   lines = my_lines, 
+#   checks = my_checks, 
+#   n_locs = 2,             # 2 environments
+#   n_reps = 2,             # 2 full replications per environment
+#   k = 4                   # 4 plots per incomplete block
+# )
