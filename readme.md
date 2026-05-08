@@ -1,7 +1,7 @@
 
 
 
-<img src="assets/logo.svg" width="90" align="left"> 
+<img src="assets/logo.png" width="90" align="left"> 
 
 
 
