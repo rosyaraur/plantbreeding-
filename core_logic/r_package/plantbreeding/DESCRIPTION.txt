@@ -1,0 +1,40 @@
+Package: plantbreeding
+Type: Package
+Title: Analysis and Visualization of Data from Plant Breeding and Genetics Experiments
+Version: 2.0.0
+Date: 2026-05-08
+Author: Umesh R. Rosyara 
+Maintainer: Umesh R. Rosyara <rosyaraur@gmail.com>
+Depends: 
+    R (>= 4.0.0)
+Imports: 
+    dplyr,
+    tidyr,
+    ggplot2,
+    lme4,
+    lmerTest,
+    emmeans,
+    agricolae,
+    metan,
+    sommer,
+    leaflet,
+    AGHmatrix,
+    visNetwork,
+    patchwork,
+    factoextra,
+    plotly,
+    lattice,
+    Matrix,
+    MASS
+Suggests: 
+    qtl, 
+    onemap,
+    gstat,
+    sp,
+    lmPerm,
+    multcomp,
+    randomForest
+Description: The package contains comprehensive functionalities relevant to the analysis of data from conventional and molecular plant breeding and genetics experiments. Features include multi-environment trial (MET) analysis, spatial experimental designs, mixed models (BLUEs/BLUPs), genomic relationship matrices, and interactive data visualization.
+License: GPL (>= 2)
+URL: https://r-forge.r-project.org/projects/plantbreeding/
+Repository: R-Forge

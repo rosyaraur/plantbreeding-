@@ -1,0 +1,78 @@
+## 🐍 Python Package Anatomy: `plantbreeding_py`
+
+To ensure the Python side of the biometric engine is robust, installable, and easily integrated with the AI agent, it adheres to the standard PyPI (Python Package Index) library structure.
+
+Below is the exact directory tree for the standalone Python package, followed by a detailed explanation of each component.
+
+```text
+core_logic/python_package/
+│
+├── setup.py                 # Package metadata and pip dependencies
+│
+└── plantbreeding_py/        # 🧠 Core Logic (The actual Python module)
+    ├── __init__.py          # Module initializer and function exporter
+    ├── adesign_inventory.py
+    ├── ammi_full.py
+    ├── aug_rcb.py
+    ├── aug_rowcol.py
+    ├── calculate_audpc.py
+    ├── carolina1.py
+    ├── carolina2.py
+    ├── diallele1.py
+    ├── gencor_lm.py
+    ├── generate_lattice_plan.py
+    ├── generate_rcbd_plan.py
+    ├── generate_stripplot_plan.py
+    ├── gge_biplot_analysis.py
+    ├── line_tester.py
+    ├── prep_design_inventory.py
+    ├── selection_index.py
+    ├── simulate_field_trial.py
+    └── stability.py
+
+```
+
+---
+
+### 📄 Root Level Files
+
+* **`setup.py`:** This is the Python equivalent of the R `DESCRIPTION` file. It tells the Python package manager (`pip`) what your library is called, what version it is, and exactly which external libraries it needs to run. When the AI agent environment is being built, running `pip install .` in this folder automatically downloads requirements like `pandas`, `numpy`, `statsmodels`, and `scikit-learn`.
+
+---
+
+### 📂 Directory Breakdown
+
+#### 1. `plantbreeding_py/` (The Core Engine)
+
+This directory acts as the actual Python module that users and the AI agent will import.
+
+* **Rules:** This folder should only contain pure Python `.py` scripts containing your statistical math. **Do not** put your LangChain AI wrappers in here (those belong in `tools/python_wrappers.py` at the project root).
+* **Naming Convention:** As seen in your structure, filenames use standard Python `snake_case` (e.g., `gge_biplot_analysis.py`, not `GGE_Biplot.py`).
+
+#### 2. `__init__.py` (The Exporter)
+
+This is arguably the most important file in the folder. It acts exactly like the `NAMESPACE` file in your R package.
+
+* **The Problem:** Without it, a user would have to write ugly, deeply nested imports like:
+`from plantbreeding_py.simulate_field_trial import simulate_field_trial`
+* **The Solution:** Inside `__init__.py`, you explicitly import the main functions from your individual scripts. This allows the AI agent wrappers or end-users to load tools cleanly from the top level:
+`from plantbreeding_py import simulate_field_trial, gge_biplot_analysis`
+
+---
+
+### 🛠️ Developer Workflow
+
+If you are translating a new R tool into Python or adding a brand new Python-native statistical tool, the standard development loop looks like this:
+
+1. **Write Code:** Create a new `.py` file inside the `plantbreeding_py/` directory.
+2. **Define Dependencies:** If your new script uses a new library (e.g., you start using `networkx` for pedigree graphs), you must add it to the `install_requires` list inside `setup.py`.
+3. **Update the Init:** Open `__init__.py` and add your new function to the export list so it becomes visible to the outside world.
+4. **Install/Update Locally:** Open your terminal, navigate to `core_logic/python_package/`, and run:
+```bash
+pip install -e .
+
+```
+
+
+*(Note: The `-e` flag stands for "editable". It means any future changes you make to the `.py` files will instantly apply to your environment without needing to run the install command again!)*
+5. **Bind to AI:** Go to the project root, open `tools/python_wrappers.py`, import your new function, wrap it in a LangChain `@tool`, and add it to the registry.

@@ -1,0 +1,67 @@
+## 📦 R Package Anatomy: `plantbreeding`
+
+To ensure the R package remains robust, installable, and easily integrated with the AI agent, it adheres to a clean, standardized R package structure.
+
+Below is the exact directory tree for the standalone R package, followed by a detailed explanation of each component.
+
+```text
+core_logic/r_package/plantbreeding/
+│
+├── DESCRIPTION          # Package metadata and dependencies
+├── NAMESPACE            # Explicitly exported functions
+│
+├── R/                   # 🧠 Core Logic (The actual code)
+│   ├── analyse_rcbd.R
+│   ├── calculate_win_prob.R
+│   └── ... (all other .R scripts)
+│
+├── man/                 # 📖 Documentation Manuals (Auto-generated)
+│   ├── analyze_rcbd.Rd
+│   └── calculate_win_prob.Rd
+│
+└── data/                # 📊 Built-in Datasets
+    └── sample_trials.rda
+
+```
+
+---
+
+### 📄 Root Level Files
+
+* **`DESCRIPTION`:** The most critical file for package installation. It defines the package name, version, author, and the **Imports** list. When the AI agent (or a human developer) installs this package, R reads this file to automatically download required libraries like `lme4`, `emmeans`, and `ggplot2`.
+* **`NAMESPACE`:** Controls which functions are exposed to the user and which are kept hidden as internal helpers. For this project, using `exportPattern("^[[:alpha:]]+")` automatically exposes all main biometric functions to the AI agent's wrappers.
+
+---
+
+### 📂 Directory Breakdown
+
+#### 1. `R/` (The Core Engine)
+
+This is where all your statistical and biometric scripts live.
+
+* **Rules:** Only `.R` files belong here. No raw data files (`.csv`) and no Python scripts.
+* **Best Practice:** Keep functions modular. Instead of one massive script, break them down exactly as you have (e.g., `analyze_spatial_ancova.R`, `rank_gxe_analysis.R`).
+
+#### 2. `man/` (Manuals)
+
+This folder contains the `.Rd` (R documentation) files. When a user types `?calculate_win_prob` in the R console, R looks here to generate the help page.
+
+* **Automation Note:** It is highly recommended to use the `roxygen2` package rather than writing these by hand. By writing special comments (`#'`) directly above your functions in the `R/` folder, running `devtools::document()` will automatically generate and update all files in this `man/` folder.
+
+#### 3. `data/` (Built-in Datasets)
+
+This directory stores sample datasets (like historical barley data or greenhouse stand counts) used for testing the functions or running examples.
+
+* **Format:** Data must be saved as compressed `.rda` or `.RData` files.
+* **Usage:** Once the package is installed, users can instantly load this data using the `data()` command in R.
+
+---
+
+### 🛠️ Developer Workflow
+
+If you are adding a new statistical tool to this package, the standard development loop using the `devtools` library looks like this:
+
+1. **Write Code:** Add your new script to the `R/` directory.
+2. **Write Docs:** Add `#' @param` and `#' @return` comments above the function in your script.
+3. **Document:** Run `devtools::document()` in the R console to automatically generate the new `man/` file and update the `NAMESPACE`.
+4. **Install:** Run `devtools::install()` to install the fresh version locally so your Python AI wrappers can immediately use the new tool.

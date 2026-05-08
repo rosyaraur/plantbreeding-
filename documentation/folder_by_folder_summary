@@ -1,0 +1,132 @@
+### 🌳 The Master Directory Tree
+
+Here is the bird's-eye view of what your final project folder should look like:
+
+```text
+PlantbreedAIAgent/
+├── assets/
+├── core_logic/
+├── tools/
+├── agent_core/
+├── api/
+├── frontend/
+├── workspace/
+├── requirements.txt
+└── README.md
+
+```
+
+---
+
+### 📁 1. `assets/` (Branding & Media)
+
+**Purpose:** Stores static files used by your UI and documentation so they don't clutter your code directories.
+
+* **What goes inside:**
+* `logo.svg` (The PlantbreedAIAgent logo we designed).
+* Any placeholder images or diagrams for your `README.md`.
+
+
+* **Setup Rule:** Never put data or code here. Only UI assets.
+
+### 📁 2. `core_logic/` (The Muscle)
+
+**Purpose:** This is your pure statistical foundation. It contains your standalone R and Python packages. **Absolutely no AI code goes in here.**
+
+* **Sub-folders:**
+* `r_package/plantbreeding/`: Contains your `DESCRIPTION`, `NAMESPACE`, and the `R/` folder full of your raw `.R` scripts.
+* `python_package/`: Contains your `setup.py` and the `plantbreeding_py/` folder with your raw `.py` scripts.
+
+
+* **Setup Action:** * Developers can navigate into these subfolders and run `pip install .` or use `devtools::install_local()` to use the math libraries completely independently of the AI agent.
+
+### 📁 3. `tools/` (The Hands)
+
+**Purpose:** This is the translation layer. It acts as the bridge teaching the AI how to use the math found in `core_logic/`.
+
+* **Key Files:**
+* `r_wrappers.py`: Uses `rpy2` and LangChain `@tool` decorators to wrap your R scripts. It catches R errors, saves plots to the workspace, and returns text summaries to the AI.
+* `python_wrappers.py`: LangChain wrappers for your native Python scripts.
+* `tool_registry.py`: A single file that imports every tool from the wrappers and bundles them into a master list (`get_all_tools()`).
+
+
+* **Setup Rule:** Whenever you write a new script in `core_logic`, you *must* write a wrapper for it here and add it to the registry so the AI knows it exists.
+
+### 📁 4. `agent_core/` (The Brain)
+
+**Purpose:** Manages the AI's reasoning, memory, and persona. It connects your local LLM (Ollama) to your tool registry.
+
+* **Key Files:**
+* `orchestrator.py`: The main engine. It initializes the LangChain agent, binds the `tool_registry`, and runs the ReAct (Reason, Act, Observe) loop.
+* `prompts.py`: Holds the `SYSTEM_PROMPT` that tells the AI it is an expert biometrician and lays out its strict rules (e.g., "Do not hallucinate data").
+* `state.py`: Manages the chat history and tracks which datasets are currently active.
+
+
+
+### 📁 5. `api/` (The Spine)
+
+**Purpose:** A lightweight web server that allows the outside world (like your frontend) to talk to the AI brain.
+
+* **Key Files:**
+* `server.py`: A FastAPI application. It initializes the `orchestrator.py` agent once on startup and exposes a `/chat` endpoint.
+
+
+* **Setup Action:** You start this spine by running `uvicorn api.server:app` in your terminal. It listens for JSON requests and hands them to the brain.
+
+### 📁 6. `frontend/` (The Face)
+
+**Purpose:** The visual interface where the user actually types commands and views plots.
+
+* **Key Files:**
+* `app.py`: A Streamlit application. It generates a two-column layout: a chat interface on the left (which pings your FastAPI server) and a live view of the `workspace/outputs/` directory on the right.
+
+
+* **Setup Action:** You launch the UI by running `streamlit run frontend/app.py`.
+
+### 📁 7. `workspace/` (The Scratchpad)
+
+**Purpose:** The shared local hard drive for the agent and the user. Because LLMs cannot read or write large files directly in their text context window, they read and write to these folders instead.
+
+* **Sub-folders:**
+* `inputs/`: The user places their raw `.csv` trial data here.
+* `outputs/`: The tools in `r_wrappers.py` automatically save generated PDFs, PNGs, HTML maps, and result CSVs here. The Streamlit UI monitors this folder to display the results.
+
+
+* **Setup Rule:** Add `workspace/inputs/*` and `workspace/outputs/*` to your `.gitignore` file so you don't accidentally upload giant datasets or temporary PDFs to GitHub. Keep an empty `.gitkeep` file in each folder so the directories themselves sync.
+
+---
+
+### 🚀 Getting the System Online (Zero to Chat)
+
+Once your folders are set up, here is the exact sequence to bring the PlantbreedAIAgent online on a fresh machine:
+
+**1. Install Global Dependencies:**
+Make sure Python (3.9+) and R (4.0+) are installed. Ensure [Ollama](https://ollama.com/) is installed, running in the background, and has a model pulled (e.g., open a terminal and run `ollama pull llama3`).
+
+**2. Install Project Requirements:**
+From the root `PlantbreedAIAgent/` folder:
+
+```bash
+pip install fastapi uvicorn streamlit langchain langchain-ollama rpy2 pandas
+
+```
+
+*(Note: You will also need to ensure your R environment has packages like `lme4`, `metan`, `ggplot2` installed).*
+
+**3. Start the Backend API (Terminal 1):**
+This boots up the AI brain and connects it to the tools.
+
+```bash
+uvicorn api.server:app --reload
+
+```
+
+**4. Start the Frontend UI (Terminal 2):**
+This launches the web interface in your browser.
+
+```bash
+streamlit run frontend/app.py
+
+```
+
+Upload a CSV to `workspace/inputs/`, type *"Analyze this trial,"* and watch the engine go to work!

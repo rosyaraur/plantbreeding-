@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 460" width="100%" height="100%">
+  <defs>
+    <linearGradient id="leafGradient" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#2E7D32" /> <stop offset="100%" stop-color="#81C784" /> </linearGradient>
+    
+    <linearGradient id="techGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1565C0" /> <stop offset="100%" stop-color="#64B5F6" /> </linearGradient>
+  </defs>
+
+  <g transform="translate(87.5, 50) scale(0.65)">
+    <path d="M 100 380 C 100 380, 50 180, 250 30 C 450 180, 400 380, 400 380 C 400 380, 250 430, 100 380 Z" 
+          fill="url(#leafGradient)" opacity="0.85"/>
+
+    <g stroke="#ffffff" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="250" y1="400" x2="250" y2="130" />
+      <line x1="250" y1="330" x2="160" y2="260" />
+      <line x1="250" y1="240" x2="180" y2="180" />
+      <line x1="250" y1="280" x2="340" y2="220" />
+      <line x1="250" y1="180" x2="320" y2="130" />
+    </g>
+
+    <g fill="url(#techGradient)" stroke="#ffffff" stroke-width="4">
+      <circle cx="250" cy="400" r="16" /> <circle cx="250" cy="330" r="12" />
+      <circle cx="250" cy="280" r="12" />
+      <circle cx="250" cy="240" r="12" />
+      <circle cx="250" cy="180" r="12" />
+      <circle cx="250" cy="130" r="16" /> <circle cx="160" cy="260" r="14" />
+      <circle cx="180" cy="180" r="12" />
+      
+      <circle cx="340" cy="220" r="14" />
+      <circle cx="320" cy="130" r="12" />
+    </g>
+
+    <path d="M 380 100 Q 400 100 400 80 Q 400 100 420 100 Q 400 100 400 120 Q 400 100 380 100 Z" fill="#FFD54F" />
+    <path d="M 120 140 Q 130 140 130 130 Q 130 140 140 140 Q 130 140 130 150 Q 130 140 120 140 Z" fill="#FFD54F" />
+  </g>
+
+  <text x="250" y="410" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="38" font-weight="800" text-anchor="middle" letter-spacing="0.5">
+    <tspan fill="#2E7D32">Plantbreed</tspan><tspan fill="#1565C0">AIAgent</tspan>
+  </text>
+</svg>
