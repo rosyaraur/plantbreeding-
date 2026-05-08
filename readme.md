@@ -1,17 +1,23 @@
-```markdown
-# 🌱 PlantbreedAIAgent
 
-# <img src="assets/logo.svg" width="45" align="left"> PlantbreedAIAgent
+
+
+<img src="assets/logo.svg" width="90" align="left"> 
+
+
+
+
+
 
 **PlantbreedAIAgent** is an intelligent, autonomous data analysis engine designed specifically for plant breeders, quantitative geneticists, and agricultural biometricians. 
 
+
 It bridges the gap between natural language and complex statistical computing. Users can chat with the agent to design field trials, fit spatial mixed models, analyze Genotype-by-Environment (GxE) interactions, and calculate genomic relationships. Under the hood, the AI orchestrates a robust suite of native **R** and **Python** packages.
 
-![PlantbreedAIAgent UI](https://via.placeholder.com/800x400.png?text=Replace+with+your+Streamlit+Screenshot)
 
----
+# ![PlantbreedAIAgent UI](https://via.placeholder.com/800x400.png?text=Replace+with+your+Streamlit+Screenshot)
+<img src="assets/banner.jpg" width="90" align="left"> 
 
-## 🌟 Key Features
+### 🌟 Key Features
 
 * **Conversational Biometrics:** Ask the agent to "Run a spatial ANCOVA on my yield data" or "Calculate the win probability against the standard check," and it will automatically map your request to the correct statistical tool.
 * **Dual-Language Core:** Built on top of `plantbreeding` (R) and `plantbreeding_py` (Python). Both can be used by the AI Agent or installed separately as standalone packages.
@@ -22,7 +28,11 @@ It bridges the gap between natural language and complex statistical computing. U
   * **Genetics:** Line x Tester, Diallel, Pedigree Networks, Genomic Relationship Matrices (GRM), and MABC Population Calculators.
 * **Local & Secure:** Powered by local LLMs via Ollama, ensuring your proprietary genomic and phenotypic data never leaves your machine.
 
----
+
+
+
+
+```markdown
 
 ## 📂 Directory Structure
 
@@ -64,7 +74,7 @@ PlantbreedAIAgent/
 
 ```
 
----
+
 
 ## 🚀 Running the Full AI Agent
 

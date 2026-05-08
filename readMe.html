@@ -352,31 +352,47 @@ display: none;
 </div>
 
 
-<pre class="markdown"><code># 🌱 PlantbreedAIAgent
-
-# &lt;img src=&quot;assets/logo.svg&quot; width=&quot;45&quot; align=&quot;left&quot;&gt; PlantbreedAIAgent
-
-**PlantbreedAIAgent** is an intelligent, autonomous data analysis engine designed specifically for plant breeders, quantitative geneticists, and agricultural biometricians. 
-
-It bridges the gap between natural language and complex statistical computing. Users can chat with the agent to design field trials, fit spatial mixed models, analyze Genotype-by-Environment (GxE) interactions, and calculate genomic relationships. Under the hood, the AI orchestrates a robust suite of native **R** and **Python** packages.
-
-![PlantbreedAIAgent UI](https://via.placeholder.com/800x400.png?text=Replace+with+your+Streamlit+Screenshot)
-
----
-
-## 🌟 Key Features
-
-* **Conversational Biometrics:** Ask the agent to &quot;Run a spatial ANCOVA on my yield data&quot; or &quot;Calculate the win probability against the standard check,&quot; and it will automatically map your request to the correct statistical tool.
-* **Dual-Language Core:** Built on top of `plantbreeding` (R) and `plantbreeding_py` (Python). Both can be used by the AI Agent or installed separately as standalone packages.
-* **Comprehensive Agronomic Toolkit:**
-  * **Experimental Design:** RCBD, Alpha-Lattice, Strip-Plot, P-Rep, and Inventory-driven Augmented layouts.
-  * **Mixed Models:** BLUEs/BLUPs, Spatial ANCOVA, and Unreplicated spatial adjustments.
-  * **GxE &amp; Stability:** AMMI, GGE Biplots, Factor Analytic Selection Tools (FAST), and Safety-First indices.
-  * **Genetics:** Line x Tester, Diallel, Pedigree Networks, Genomic Relationship Matrices (GRM), and MABC Population Calculators.
-* **Local &amp; Secure:** Powered by local LLMs via Ollama, ensuring your proprietary genomic and phenotypic data never leaves your machine.
-
----
-
+<p><img role="img" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MDAgNDYwIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIj4KICA8ZGVmcz4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0ibGVhZkdyYWRpZW50IiB4MT0iMCUiIHkxPSIxMDAlIiB4Mj0iMTAwJSIgeTI9IjAlIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzJFN0QzMiIgLz4gPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjODFDNzg0IiAvPiA8L2xpbmVhckdyYWRpZW50PgogICAgCiAgICA8bGluZWFyR3JhZGllbnQgaWQ9InRlY2hHcmFkaWVudCIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiMxNTY1QzAiIC8+IDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzY0QjVGNiIgLz4gPC9saW5lYXJHcmFkaWVudD4KICA8L2RlZnM+CgogIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDg3LjUsIDUwKSBzY2FsZSgwLjY1KSI+CiAgICA8cGF0aCBkPSJNIDEwMCAzODAgQyAxMDAgMzgwLCA1MCAxODAsIDI1MCAzMCBDIDQ1MCAxODAsIDQwMCAzODAsIDQwMCAzODAgQyA0MDAgMzgwLCAyNTAgNDMwLCAxMDAgMzgwIFoiIAogICAgICAgICAgZmlsbD0idXJsKCNsZWFmR3JhZGllbnQpIiBvcGFjaXR5PSIwLjg1Ii8+CgogICAgPGcgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjgiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+CiAgICAgIDxsaW5lIHgxPSIyNTAiIHkxPSI0MDAiIHgyPSIyNTAiIHkyPSIxMzAiIC8+CiAgICAgIDxsaW5lIHgxPSIyNTAiIHkxPSIzMzAiIHgyPSIxNjAiIHkyPSIyNjAiIC8+CiAgICAgIDxsaW5lIHgxPSIyNTAiIHkxPSIyNDAiIHgyPSIxODAiIHkyPSIxODAiIC8+CiAgICAgIDxsaW5lIHgxPSIyNTAiIHkxPSIyODAiIHgyPSIzNDAiIHkyPSIyMjAiIC8+CiAgICAgIDxsaW5lIHgxPSIyNTAiIHkxPSIxODAiIHgyPSIzMjAiIHkyPSIxMzAiIC8+CiAgICA8L2c+CgogICAgPGcgZmlsbD0idXJsKCN0ZWNoR3JhZGllbnQpIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iNCI+CiAgICAgIDxjaXJjbGUgY3g9IjI1MCIgY3k9IjQwMCIgcj0iMTYiIC8+IDxjaXJjbGUgY3g9IjI1MCIgY3k9IjMzMCIgcj0iMTIiIC8+CiAgICAgIDxjaXJjbGUgY3g9IjI1MCIgY3k9IjI4MCIgcj0iMTIiIC8+CiAgICAgIDxjaXJjbGUgY3g9IjI1MCIgY3k9IjI0MCIgcj0iMTIiIC8+CiAgICAgIDxjaXJjbGUgY3g9IjI1MCIgY3k9IjE4MCIgcj0iMTIiIC8+CiAgICAgIDxjaXJjbGUgY3g9IjI1MCIgY3k9IjEzMCIgcj0iMTYiIC8+IDxjaXJjbGUgY3g9IjE2MCIgY3k9IjI2MCIgcj0iMTQiIC8+CiAgICAgIDxjaXJjbGUgY3g9IjE4MCIgY3k9IjE4MCIgcj0iMTIiIC8+CiAgICAgIAogICAgICA8Y2lyY2xlIGN4PSIzNDAiIGN5PSIyMjAiIHI9IjE0IiAvPgogICAgICA8Y2lyY2xlIGN4PSIzMjAiIGN5PSIxMzAiIHI9IjEyIiAvPgogICAgPC9nPgoKICAgIDxwYXRoIGQ9Ik0gMzgwIDEwMCBRIDQwMCAxMDAgNDAwIDgwIFEgNDAwIDEwMCA0MjAgMTAwIFEgNDAwIDEwMCA0MDAgMTIwIFEgNDAwIDEwMCAzODAgMTAwIFoiIGZpbGw9IiNGRkQ1NEYiIC8+CiAgICA8cGF0aCBkPSJNIDEyMCAxNDAgUSAxMzAgMTQwIDEzMCAxMzAgUSAxMzAgMTQwIDE0MCAxNDAgUSAxMzAgMTQwIDEzMCAxNTAgUSAxMzAgMTQwIDEyMCAxNDAgWiIgZmlsbD0iI0ZGRDU0RiIgLz4KICA8L2c+CgogIDx0ZXh0IHg9IjI1MCIgeT0iNDEwIiBmb250LWZhbWlseT0ic3lzdGVtLXVpLCAtYXBwbGUtc3lzdGVtLCBCbGlua01hY1N5c3RlbUZvbnQsICdTZWdvZSBVSScsIFJvYm90bywgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIzOCIgZm9udC13ZWlnaHQ9IjgwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgbGV0dGVyLXNwYWNpbmc9IjAuNSI+CiAgICA8dHNwYW4gZmlsbD0iIzJFN0QzMiI+UGxhbnRicmVlZDwvdHNwYW4+PHRzcGFuIGZpbGw9IiMxNTY1QzAiPkFJQWdlbnQ8L3RzcGFuPgogIDwvdGV4dD4KPC9zdmc+Cg==" width="90" align="left"></p>
+<p><strong>PlantbreedAIAgent</strong> is an intelligent, autonomous data
+analysis engine designed specifically for plant breeders, quantitative
+geneticists, and agricultural biometricians.</p>
+<p>It bridges the gap between natural language and complex statistical
+computing. Users can chat with the agent to design field trials, fit
+spatial mixed models, analyze Genotype-by-Environment (GxE)
+interactions, and calculate genomic relationships. Under the hood, the
+AI orchestrates a robust suite of native <strong>R</strong> and
+<strong>Python</strong> packages.</p>
+<div id="plantbreedaiagent-ui" class="section level1">
+<h1><img role="img" aria-label="PlantbreedAIAgent UI" src="https://via.placeholder.com/800x400.png?text=Replace+with+your+Streamlit+Screenshot" alt="PlantbreedAIAgent UI" /></h1>
+<p><img role="img" src="assets/banner.jpg" width="90" align="left"></p>
+<div id="key-features" class="section level3">
+<h3>🌟 Key Features</h3>
+<ul>
+<li><strong>Conversational Biometrics:</strong> Ask the agent to “Run a
+spatial ANCOVA on my yield data” or “Calculate the win probability
+against the standard check,” and it will automatically map your request
+to the correct statistical tool.</li>
+<li><strong>Dual-Language Core:</strong> Built on top of
+<code>plantbreeding</code> (R) and <code>plantbreeding_py</code>
+(Python). Both can be used by the AI Agent or installed separately as
+standalone packages.</li>
+<li><strong>Comprehensive Agronomic Toolkit:</strong>
+<ul>
+<li><strong>Experimental Design:</strong> RCBD, Alpha-Lattice,
+Strip-Plot, P-Rep, and Inventory-driven Augmented layouts.</li>
+<li><strong>Mixed Models:</strong> BLUEs/BLUPs, Spatial ANCOVA, and
+Unreplicated spatial adjustments.</li>
+<li><strong>GxE &amp; Stability:</strong> AMMI, GGE Biplots, Factor
+Analytic Selection Tools (FAST), and Safety-First indices.</li>
+<li><strong>Genetics:</strong> Line x Tester, Diallel, Pedigree
+Networks, Genomic Relationship Matrices (GRM), and MABC Population
+Calculators.</li>
+</ul></li>
+<li><strong>Local &amp; Secure:</strong> Powered by local LLMs via
+Ollama, ensuring your proprietary genomic and phenotypic data never
+leaves your machine.</li>
+</ul>
+<pre class="markdown"><code>
 ## 📂 Directory Structure
 
 The repository is strictly separated into the AI Orchestration layer and the Core Statistical Logic.
@@ -415,7 +431,7 @@ PlantbreedAIAgent/
     ├── inputs/                 # User uploads (CSVs, datasets)
     └── outputs/                # Agent-generated Plots, PDFs, and HTML widgets
 </code></pre>
-<hr />
+</div>
 <div id="running-the-full-ai-agent" class="section level2">
 <h2>🚀 Running the Full AI Agent</h2>
 <p>To run the conversational agent with the UI, you need to start both
@@ -537,6 +553,7 @@ know how to use your new function.</li>
 <p>This project is licensed under the MIT License - see the LICENSE file
 for details.</p>
 <pre><code></code></pre>
+</div>
 </div>
 
 
