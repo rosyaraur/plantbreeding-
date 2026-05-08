@@ -20,7 +20,7 @@ base = importr('base')
 # ==========================================
 # 0. LOAD ALL R SCRIPTS AT MODULE STARTUP
 # ==========================================
-R_DIR = 'core_logic/r_package/plantbreeding/R/'
+R_DIR = "/content/PlantbreedAIAgent/core_logic/r_package/plantbreeding/R"
 OUTPUT_DIR = 'workspace/outputs/'
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
