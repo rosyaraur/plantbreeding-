@@ -1,5 +1,5 @@
 # agent_core/orchestrator.py
-from langchain_ollama import ChatOllama
+from langchain_community.chat_models import ChatOllama
 from langchain.agents import AgentExecutor, create_tool_calling_agent
 from langchain_core.prompts import ChatPromptTemplate
 from tools.tool_registry import get_all_tools
