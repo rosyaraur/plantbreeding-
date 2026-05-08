@@ -13,9 +13,11 @@
 
 It bridges the gap between natural language and complex statistical computing. Users can chat with the agent to design field trials, fit spatial mixed models, analyze Genotype-by-Environment (GxE) interactions, and calculate genomic relationships. Under the hood, the AI orchestrates a robust suite of native **R** and **Python** packages.
 
-
+```
 # ![PlantbreedAIAgent UI](https://via.placeholder.com/800x400.png?text=Replace+with+your+Streamlit+Screenshot)
-<img src="assets/banner.jpg" width="90" align="left"> 
+```
+
+<img src="assets/banner.jpeg" width="600" align="center"> 
 
 ### 🌟 Key Features
 
