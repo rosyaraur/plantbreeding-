@@ -17,6 +17,14 @@ grdevices = importr('grDevices')
 htmlwidgets = importr('htmlwidgets')
 base = importr('base')
 
+def safe_dev_off():
+    """Checks if a graphics device is open before closing to prevent null device errors."""
+    try:
+        if robjects.r['dev.cur']()[0] > 1:
+            grdevices.dev_off()
+    except:
+        pass
+
 # ==========================================
 # 0. ABSOLUTE PATHS & FILE HANDLING
 # ==========================================
@@ -76,7 +84,7 @@ def generate_rcbd_plan_tool(lines: List[str], checks: List[str], n_locs: int, n_
         robjects.conversion.rpy2py(r_res.rx2('Data')).to_csv(f"{OUTPUT_DIR}RCBD_Plan.csv", index=False)
         grdevices.pdf(f"{OUTPUT_DIR}RCBD_Plot.pdf"); base.print(r_res.rx2('Plot')); grdevices.dev_off()
         return "RCBD plan and plot generated successfully."
-    except Exception as e: grdevices.dev_off(); return f"Error: {e}"
+    except Exception as e: safe_dev_off(); return f"Error: {e}"
 
 @tool
 def generate_lattice_plan_tool(lines: List[str], checks: List[str], n_locs: int, n_reps: int, k: int) -> str:
@@ -86,7 +94,7 @@ def generate_lattice_plan_tool(lines: List[str], checks: List[str], n_locs: int,
         robjects.conversion.rpy2py(r_res.rx2('Data')).to_csv(f"{OUTPUT_DIR}Lattice_Plan.csv", index=False)
         grdevices.pdf(f"{OUTPUT_DIR}Lattice_Plot.pdf"); base.print(r_res.rx2('Plot')); grdevices.dev_off()
         return "Lattice plan and plot generated successfully."
-    except Exception as e: grdevices.dev_off(); return f"Error: {e}"
+    except Exception as e: safe_dev_off(); return f"Error: {e}"
 
 @tool
 def generate_stripplot_plan_tool(main_plots: List[str], sub_plots: List[str], n_locs: int, n_blocks: int) -> str:
@@ -96,7 +104,7 @@ def generate_stripplot_plan_tool(main_plots: List[str], sub_plots: List[str], n_
         robjects.conversion.rpy2py(r_res.rx2('Data')).to_csv(f"{OUTPUT_DIR}StripPlot_Plan.csv", index=False)
         grdevices.pdf(f"{OUTPUT_DIR}StripPlot_Plot.pdf"); base.print(r_res.rx2('Plot')); grdevices.dev_off()
         return "Strip-plot plan and plot generated successfully."
-    except Exception as e: grdevices.dev_off(); return f"Error: {e}"
+    except Exception as e: safe_dev_off(); return f"Error: {e}"
 
 @tool
 def generate_inventory_design_tool(locations_csv: str, genotypes_csv: str) -> str:
@@ -137,7 +145,7 @@ def analyze_rcbd_comp_tool(data_csv: str, trt_col: str, blk_col: str, resp_col: 
         robjects.globalenv['analyze_rcbd'](df, trt_col, blk_col, resp_col)
         grdevices.dev_off()
         return "Comprehensive RCBD analysis plots generated."
-    except Exception as e: grdevices.dev_off(); return f"Error: {e}"
+    except Exception as e: safe_dev_off(); return f"Error: {e}"
 
 @tool
 def analyze_rcbd_contrast_tool(data_csv: str, resp: str, block: str, trt: str) -> str:
@@ -182,7 +190,7 @@ def adjust_spatial_unreplicated_tool(data_csv: str, method: str = "loess") -> st
         grdevices.dev_off()
         robjects.conversion.rpy2py(r_res.rx2('data')).to_csv(f"{OUTPUT_DIR}Spatial_Unrep_Adj.csv", index=False)
         return "Unreplicated spatial adjustment complete."
-    except Exception as e: grdevices.dev_off(); return f"Error: {e}"
+    except Exception as e: safe_dev_off(); return f"Error: {e}"
 
 # ==========================================
 # 4. MET, BLUPs, GxE & STABILITY
@@ -197,7 +205,7 @@ def calc_geno_values_tool(data_csv: str, y_var: str, geno: str, method: str = "B
         grdevices.dev_off()
         robjects.conversion.rpy2py(r_res.rx2('values')).to_csv(f"{OUTPUT_DIR}{method}_Values.csv", index=False)
         return f"{method} calculation complete."
-    except Exception as e: grdevices.dev_off(); return f"Error: {e}"
+    except Exception as e: safe_dev_off(); return f"Error: {e}"
 
 @tool
 def analyze_varietal_trial_tool(data_csv: str, design: str, model_type: str, y_var: str, geno: str) -> str:
@@ -258,7 +266,7 @@ def generate_gge_biplot_tool(data_csv: str, geno_col: str) -> str:
         robjects.globalenv['GGE_Biplot_Analysis'](df, geno_col)
         grdevices.dev_off()
         return "GGE Biplot generated."
-    except Exception as e: grdevices.dev_off(); return f"Error: {e}"
+    except Exception as e: safe_dev_off(); return f"Error: {e}"
 
 @tool
 def run_metan_gge_tool(data_csv: str, geno_col: str) -> str:
@@ -269,7 +277,7 @@ def run_metan_gge_tool(data_csv: str, geno_col: str) -> str:
         robjects.globalenv['run_gge_analysis'](df, geno_col)
         grdevices.dev_off()
         return "Metan GGE workflow complete."
-    except Exception as e: grdevices.dev_off(); return f"Error: {e}"
+    except Exception as e: safe_dev_off(); return f"Error: {e}"
 
 @tool
 def run_comstock_robinson_tool(data_csv: str, trait: str, geno: str, loc: str, rep: str, method: str = "mixed") -> str:
@@ -341,7 +349,7 @@ def run_safety_first_analysis_tool(data_csv: str, geno: str, y_col: str, thresho
         grdevices.dev_off()
         robjects.conversion.rpy2py(r_res.rx2('Table')).to_csv(f"{OUTPUT_DIR}Safety_First.csv", index=False)
         return "Safety-First risk analysis complete."
-    except Exception as e: grdevices.dev_off(); return f"Error: {e}"
+    except Exception as e: safe_dev_off(); return f"Error: {e}"
 
 # ==========================================
 # 6. MATING DESIGNS
@@ -444,7 +452,7 @@ def classify_germplasm_tool(marker_csv: str, method: str, k: int = 3) -> str:
         robjects.globalenv['classify_germplasm'](df, method, k, plot=True)
         grdevices.dev_off()
         return f"Germplasm ({method}) classified."
-    except Exception as e: grdevices.dev_off(); return f"Error: {e}"
+    except Exception as e: safe_dev_off(); return f"Error: {e}"
 
 @tool
 def calculate_genomic_relationship_tool(marker_csv: str, method: str = "VanRaden") -> str:
@@ -504,7 +512,7 @@ def plot_genetic_gain_tool(data_csv: str, cycle: str, value: str) -> str:
         robjects.globalenv['plotGeneticGain'](df, cycle, value)
         grdevices.dev_off()
         return "Genetic gain plotted."
-    except Exception as e: grdevices.dev_off(); return f"Error: {e}"
+    except Exception as e: safe_dev_off(); return f"Error: {e}"
 
 # ==========================================
 # 8. PATHOLOGY
