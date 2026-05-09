@@ -1,5 +1,7 @@
 # agent_core/orchestrator.py
-from langchain_community.chat_models import ChatOllama
+
+# FIXED: Now using the official tool-calling Ollama integration
+from langchain_ollama import ChatOllama
 from langchain.agents import AgentExecutor, create_tool_calling_agent
 from langchain_core.prompts import ChatPromptTemplate
 from tools.tool_registry import get_all_tools
@@ -16,7 +18,7 @@ When a user asks for an analysis:
 
 class PlantbreedAIAgent:
     def __init__(self, model_name="llama3"):
-        # Initialize local LLM via Ollama
+        # Initialize local LLM via official Ollama package
         self.llm = ChatOllama(model=model_name, temperature=0)
         
         self.tools = get_all_tools()
