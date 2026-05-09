@@ -17,7 +17,7 @@ When a user asks for an analysis:
 """
 
 class PlantbreedAIAgent:
-    def __init__(self, model_name="llama3"):
+    def __init__(self, model_name="llama3.2"):
         # Initialize local LLM via official Ollama package
         self.llm = ChatOllama(model=model_name, temperature=0)
         

@@ -6,7 +6,7 @@ from agent_core.orchestrator import PlantbreedAIAgent
 app = FastAPI(title="PlantbreedAIAgent API")
 
 # Initialize the engine once when the server starts
-engine = PlantbreedAIAgent(model_name="llama3") 
+engine = PlantbreedAIAgent(model_name="llama3.2") 
 
 class ChatRequest(BaseModel):
     message: str
