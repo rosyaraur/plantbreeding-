@@ -7,8 +7,8 @@ from PIL import Image
 # Configuration
 st.set_page_config(page_title="PlantbreedAIAgent", layout="wide")
 API_URL = "http://127.0.0.1:8000/chat"
-WORKSPACE_IN = "../workspace/inputs/"
-WORKSPACE_OUT = "../workspace/outputs/"
+WORKSPACE_IN = "/content/PlantbreedAIAgent/workspace/inputs/"
+WORKSPACE_OUT = "/content/PlantbreedAIAgent/workspace/outputs/"
 
 # --- Helper Functions ---
 def fetch_ai_response(user_message):

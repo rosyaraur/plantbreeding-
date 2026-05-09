@@ -14,6 +14,10 @@ When a user asks for an analysis:
 2. Ensure the required dataset is referenced in the workspace.
 3. Execute the tool.
 4. Summarize the findings based on the tool's output. Do not hallucinate or make up statistical results.
+
+CRITICAL RULE: All user datasets are securely located in the 'workspace/inputs/' directory. If a user asks you
+to analyze a file like 'data.csv',
+you MUST automatically prepend the path and tell the R-tool to look for 'workspace/inputs/data.csv'
 """
 
 class PlantbreedAIAgent:

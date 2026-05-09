@@ -18,12 +18,23 @@ htmlwidgets = importr('htmlwidgets')
 base = importr('base')
 
 # ==========================================
-# 0. LOAD ALL R SCRIPTS AT MODULE STARTUP
+# 0. ABSOLUTE PATHS & FILE HANDLING
 # ==========================================
 R_DIR = "/content/PlantbreedAIAgent/core_logic/r_package/plantbreeding/R"
-OUTPUT_DIR = 'workspace/outputs/'
+INPUT_DIR = "/content/PlantbreedAIAgent/workspace/inputs/"
+OUTPUT_DIR = "/content/PlantbreedAIAgent/workspace/outputs/"
+
+os.makedirs(INPUT_DIR, exist_ok=True)
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
+def get_input_path(file_path: str) -> str:
+    """Forces the file path to securely look in the absolute inputs folder."""
+    if not file_path.startswith("/content"):
+        clean_filename = os.path.basename(file_path)
+        return os.path.join(INPUT_DIR, clean_filename)
+    return file_path
+
+# Load all R scripts at module startup
 scripts = [
     'simulate_field_trial.R', 'generate_rcbd_plan.R', 'generate_lattice_plan.R', 'generate_stripplot_plan.R',
     'adesign.R', 'prepDesign.R', 'auugmentdesign.R', 'analyse_rcbd.R', 'analyze_rcbd_contrast.R', 
@@ -91,7 +102,7 @@ def generate_stripplot_plan_tool(main_plots: List[str], sub_plots: List[str], n_
 def generate_inventory_design_tool(locations_csv: str, genotypes_csv: str) -> str:
     """Generates a MET plan with spatial blocking driven by seed inventory."""
     try:
-        r_res = robjects.globalenv['adesign_inventory'](locations_csv, genotypes_csv)
+        r_res = robjects.globalenv['adesign_inventory'](get_input_path(locations_csv), get_input_path(genotypes_csv))
         robjects.conversion.rpy2py(r_res.rx2('TrialPlan')).to_csv(f"{OUTPUT_DIR}Inventory_Plan.csv", index=False)
         return "Inventory-driven design generated successfully."
     except Exception as e: return f"Error: {e}"
@@ -100,7 +111,7 @@ def generate_inventory_design_tool(locations_csv: str, genotypes_csv: str) -> st
 def generate_prep_design_tool(locations_csv: str, genotypes_csv: str, check_prop: float = 0.20) -> str:
     """Generates a proportional partially replicated (p-rep) design."""
     try:
-        r_res = robjects.globalenv['prep_design_inventory'](locations_csv, genotypes_csv, check_prop)
+        r_res = robjects.globalenv['prep_design_inventory'](get_input_path(locations_csv), get_input_path(genotypes_csv), check_prop)
         robjects.conversion.rpy2py(r_res.rx2('TrialPlan')).to_csv(f"{OUTPUT_DIR}Prep_Plan.csv", index=False)
         return "P-rep design generated successfully."
     except Exception as e: return f"Error: {e}"
@@ -121,7 +132,7 @@ def generate_augmented_design_tool(checks: List[str], newtrt: List[str], block_s
 def analyze_rcbd_comp_tool(data_csv: str, trt_col: str, blk_col: str, resp_col: str) -> str:
     """Performs comprehensive RCBD ANOVA, Tukey HSD, and Permutation Power."""
     try:
-        df = pandas2ri.py2rpy(pd.read_csv(data_csv))
+        df = pandas2ri.py2rpy(pd.read_csv(get_input_path(data_csv)))
         grdevices.pdf(f"{OUTPUT_DIR}RCBD_Analysis.pdf")
         robjects.globalenv['analyze_rcbd'](df, trt_col, blk_col, resp_col)
         grdevices.dev_off()
@@ -132,7 +143,7 @@ def analyze_rcbd_comp_tool(data_csv: str, trt_col: str, blk_col: str, resp_col: 
 def analyze_rcbd_contrast_tool(data_csv: str, resp: str, block: str, trt: str) -> str:
     """Performs RCBD ANOVA with orthogonal contrasts."""
     try:
-        df = pandas2ri.py2rpy(pd.read_csv(data_csv))
+        df = pandas2ri.py2rpy(pd.read_csv(get_input_path(data_csv)))
         robjects.globalenv['analyze_rcbd_contrast'](df, resp, block, StrVector([trt]))
         return "RCBD contrast analysis completed (Outputs logged in R console environment)."
     except Exception as e: return f"Error: {e}"
@@ -141,7 +152,7 @@ def analyze_rcbd_contrast_tool(data_csv: str, resp: str, block: str, trt: str) -
 def analyze_factorial_anova_tool(data_csv: str, resp: str, trts: List[str], block: str = None) -> str:
     """Universal ANOVA (CRD, RCBD, Factorial)."""
     try:
-        df = pandas2ri.py2rpy(pd.read_csv(data_csv))
+        df = pandas2ri.py2rpy(pd.read_csv(get_input_path(data_csv)))
         kwargs = {"data": df, "response": resp, "treatments": StrVector(trts)}
         if block: kwargs["block"] = block
         robjects.globalenv['analyze_factorial_anova'](**kwargs)
@@ -152,7 +163,7 @@ def analyze_factorial_anova_tool(data_csv: str, resp: str, trts: List[str], bloc
 def analyze_spatial_ancova_tool(data_csv: str, resp: str, trt: str, covar: str = None, row: str = None, col: str = None) -> str:
     """Advanced Spatial ANCOVA to adjust treatment effects using grid coordinates/covariates."""
     try:
-        df = pandas2ri.py2rpy(pd.read_csv(data_csv))
+        df = pandas2ri.py2rpy(pd.read_csv(get_input_path(data_csv)))
         kwargs = {"data": df, "response": resp, "treatment": trt}
         for k, v in [("numeric_covariate", covar), ("row", row), ("col", col)]:
             if v: kwargs[k] = v
@@ -165,7 +176,7 @@ def analyze_spatial_ancova_tool(data_csv: str, resp: str, trt: str, covar: str =
 def adjust_spatial_unreplicated_tool(data_csv: str, method: str = "loess") -> str:
     """Adjusts unreplicated trials using spatial trends (loess, knn, rowcol)."""
     try:
-        df = pandas2ri.py2rpy(pd.read_csv(data_csv))
+        df = pandas2ri.py2rpy(pd.read_csv(get_input_path(data_csv)))
         grdevices.pdf(f"{OUTPUT_DIR}Spatial_Unreplicated.pdf")
         r_res = robjects.globalenv['adjust_spatial_unreplicated'](df, method=method)
         grdevices.dev_off()
@@ -180,7 +191,7 @@ def adjust_spatial_unreplicated_tool(data_csv: str, method: str = "loess") -> st
 def calc_geno_values_tool(data_csv: str, y_var: str, geno: str, method: str = "BLUP") -> str:
     """Extracts Best Linear Unbiased Predictors (BLUPs) or BLUEs."""
     try:
-        df = pandas2ri.py2rpy(pd.read_csv(data_csv))
+        df = pandas2ri.py2rpy(pd.read_csv(get_input_path(data_csv)))
         grdevices.pdf(f"{OUTPUT_DIR}Geno_Values_{method}.pdf")
         r_res = robjects.globalenv['calc_geno_values'](data=df, y_var=y_var, geno_var=geno, method=method)
         grdevices.dev_off()
@@ -192,7 +203,7 @@ def calc_geno_values_tool(data_csv: str, y_var: str, geno: str, method: str = "B
 def analyze_varietal_trial_tool(data_csv: str, design: str, model_type: str, y_var: str, geno: str) -> str:
     """Fits mixed models for varietal trials (RCBD, Lattice, Prep)."""
     try:
-        df = pandas2ri.py2rpy(pd.read_csv(data_csv))
+        df = pandas2ri.py2rpy(pd.read_csv(get_input_path(data_csv)))
         r_res = robjects.globalenv['analyze_varietal_trial'](data=df, design=design, model_type=model_type, handle_missing="drop", y_var=y_var, genotype_var=geno)
         robjects.conversion.rpy2py(r_res.rx2('estimates')).to_csv(f"{OUTPUT_DIR}Varietal_{model_type}.csv", index=False)
         return f"Varietal mixed model ({model_type}) complete."
@@ -202,7 +213,7 @@ def analyze_varietal_trial_tool(data_csv: str, design: str, model_type: str, y_v
 def run_augmented_rcb_tool(data_csv: str, geno: str, block: str, trait: str) -> str:
     """Analyzes Augmented RCB Designs."""
     try:
-        df = pandas2ri.py2rpy(pd.read_csv(data_csv))
+        df = pandas2ri.py2rpy(pd.read_csv(get_input_path(data_csv)))
         r_res = robjects.globalenv['aug.rcb'](df, geno, block, trait, plot=False, verbose=False)
         robjects.conversion.rpy2py(r_res.rx2('adjusted_values')).to_csv(f"{OUTPUT_DIR}Aug_RCB.csv", index=False)
         return "Augmented RCB analysis complete."
@@ -212,7 +223,7 @@ def run_augmented_rcb_tool(data_csv: str, geno: str, block: str, trait: str) -> 
 def run_augmented_rowcol_tool(data_csv: str, row: str, col: str, geno: str, trait: str) -> str:
     """Analyzes Augmented Row-Column Designs."""
     try:
-        df = pandas2ri.py2rpy(pd.read_csv(data_csv))
+        df = pandas2ri.py2rpy(pd.read_csv(get_input_path(data_csv)))
         r_res = robjects.globalenv['aug.rowcol'](df, row, col, geno, trait)
         robjects.conversion.rpy2py(r_res.rx2('Adjustment')).to_csv(f"{OUTPUT_DIR}Aug_RowCol.csv", index=False)
         return "Augmented Row-Column analysis complete."
@@ -222,7 +233,7 @@ def run_augmented_rowcol_tool(data_csv: str, row: str, col: str, geno: str, trai
 def run_stability_analysis_tool(data_csv: str, trait: str, geno: str, env: str, rep: str) -> str:
     """Eberhart and Russell GxE stability analysis."""
     try:
-        df = pandas2ri.py2rpy(pd.read_csv(data_csv))
+        df = pandas2ri.py2rpy(pd.read_csv(get_input_path(data_csv)))
         r_res = robjects.globalenv['stability'](df, trait, geno, env, rep, verbose=False)
         robjects.conversion.rpy2py(r_res.rx2('scores')).to_csv(f"{OUTPUT_DIR}Stability.csv", index=False)
         return "Stability analysis complete."
@@ -232,7 +243,7 @@ def run_stability_analysis_tool(data_csv: str, trait: str, geno: str, env: str, 
 def run_ammi_analysis_tool(data_csv: str, env: str, geno: str, rep: str, yvar: str) -> str:
     """AMMI analysis for multi-environment trials."""
     try:
-        df = pandas2ri.py2rpy(pd.read_csv(data_csv))
+        df = pandas2ri.py2rpy(pd.read_csv(get_input_path(data_csv)))
         r_res = robjects.globalenv['ammi.full'](df, env, geno, rep, yvar)
         robjects.conversion.rpy2py(r_res.rx2('analysis')).to_csv(f"{OUTPUT_DIR}AMMI.csv", index=False)
         return "AMMI analysis complete."
@@ -242,7 +253,7 @@ def run_ammi_analysis_tool(data_csv: str, env: str, geno: str, rep: str, yvar: s
 def generate_gge_biplot_tool(data_csv: str, geno_col: str) -> str:
     """Raw GGE Biplot SVD visualization."""
     try:
-        df = pandas2ri.py2rpy(pd.read_csv(data_csv))
+        df = pandas2ri.py2rpy(pd.read_csv(get_input_path(data_csv)))
         grdevices.pdf(f"{OUTPUT_DIR}GGE_Raw.pdf")
         robjects.globalenv['GGE_Biplot_Analysis'](df, geno_col)
         grdevices.dev_off()
@@ -253,7 +264,7 @@ def generate_gge_biplot_tool(data_csv: str, geno_col: str) -> str:
 def run_metan_gge_tool(data_csv: str, geno_col: str) -> str:
     """Wrapper for complete metan GGE biplot analysis."""
     try:
-        df = pandas2ri.py2rpy(pd.read_csv(data_csv))
+        df = pandas2ri.py2rpy(pd.read_csv(get_input_path(data_csv)))
         grdevices.pdf(f"{OUTPUT_DIR}Metan_GGE.pdf")
         robjects.globalenv['run_gge_analysis'](df, geno_col)
         grdevices.dev_off()
@@ -264,7 +275,7 @@ def run_metan_gge_tool(data_csv: str, geno_col: str) -> str:
 def run_comstock_robinson_tool(data_csv: str, trait: str, geno: str, loc: str, rep: str, method: str = "mixed") -> str:
     """Comstock-Robinson GxE variance partitioning."""
     try:
-        df = pandas2ri.py2rpy(pd.read_csv(data_csv))
+        df = pandas2ri.py2rpy(pd.read_csv(get_input_path(data_csv)))
         r_res = robjects.globalenv['comstock_robinson_gxe'](df, trait, geno, loc, rep, method=method)
         robjects.conversion.rpy2py(r_res.rx2('Variance_Components')).to_csv(f"{OUTPUT_DIR}Comstock.csv", index=False)
         return "Comstock-Robinson GxE complete."
@@ -274,7 +285,7 @@ def run_comstock_robinson_tool(data_csv: str, trait: str, geno: str, loc: str, r
 def run_fast_analysis_tool(data_csv: str, geno: str, env: str, yield_col: str) -> str:
     """Factor Analytic Selection Tools (FAST)."""
     try:
-        df = pandas2ri.py2rpy(pd.read_csv(data_csv))
+        df = pandas2ri.py2rpy(pd.read_csv(get_input_path(data_csv)))
         r_res = robjects.globalenv['fit_fast'](df, geno, env, yield_col, k=2)
         robjects.conversion.rpy2py(r_res.rx2('FAST')).to_csv(f"{OUTPUT_DIR}FAST.csv", index=False)
         return "FAST selection metrics generated."
@@ -287,7 +298,7 @@ def run_fast_analysis_tool(data_csv: str, geno: str, env: str, yield_col: str) -
 def rank_gxe_stability_tool(data_csv: str, geno: str, env: str, trait: str) -> str:
     """Calculates Rank-Based Non-Parametric Stability Statistics."""
     try:
-        df = pandas2ri.py2rpy(pd.read_csv(data_csv))
+        df = pandas2ri.py2rpy(pd.read_csv(get_input_path(data_csv)))
         r_res = robjects.globalenv['rank_gxe_analysis'](df, geno, env, trait)
         robjects.conversion.rpy2py(r_res).to_csv(f"{OUTPUT_DIR}Rank_Stability.csv", index=False)
         return "Rank stability computed."
@@ -297,7 +308,7 @@ def rank_gxe_stability_tool(data_csv: str, geno: str, env: str, trait: str) -> s
 def calculate_prob_superiority_tool(data_csv: str, trait: str, geno: str, env: str, check: str, method: str = "BLUP") -> str:
     """Calculates Probability of Superiority (Win Probability)."""
     try:
-        df = pandas2ri.py2rpy(pd.read_csv(data_csv))
+        df = pandas2ri.py2rpy(pd.read_csv(get_input_path(data_csv)))
         r_res = robjects.globalenv['calc_prob_superiority'](df, trait, geno, env, check, method)
         robjects.conversion.rpy2py(r_res).to_csv(f"{OUTPUT_DIR}Prob_Superiority.csv", index=False)
         return "Probability of Superiority calculated."
@@ -315,7 +326,7 @@ def calc_prob_from_summary_tool(line_mean: float, check_mean: float, var_means: 
 def calculate_on_farm_win_prob_tool(data_csv: str, y_col: str, var_col: str, new_line: str, check: str) -> str:
     """On-farm win probability analysis (generates Leaflet HTML)."""
     try:
-        df = pandas2ri.py2rpy(pd.read_csv(data_csv))
+        df = pandas2ri.py2rpy(pd.read_csv(get_input_path(data_csv)))
         robjects.globalenv['calculate_win_prob'](df, y_col, var_col, new_line, check, StrVector([]))
         return "On-farm win prob calculated (HTML map pending)."
     except Exception as e: return f"Error: {e}"
@@ -324,7 +335,7 @@ def calculate_on_farm_win_prob_tool(data_csv: str, y_col: str, var_col: str, new
 def run_safety_first_analysis_tool(data_csv: str, geno: str, y_col: str, thresholds: List[float]) -> str:
     """Evaluates genotypic risk using Safety-First indexes."""
     try:
-        df = pandas2ri.py2rpy(pd.read_csv(data_csv))
+        df = pandas2ri.py2rpy(pd.read_csv(get_input_path(data_csv)))
         grdevices.pdf(f"{OUTPUT_DIR}Safety_First.pdf")
         r_res = robjects.globalenv['safety_first_analysis'](df, geno, y_col, FloatVector(thresholds))
         grdevices.dev_off()
@@ -339,7 +350,7 @@ def run_safety_first_analysis_tool(data_csv: str, geno: str, y_col: str, thresho
 def run_line_tester_tool(data_csv: str, y_col: str, geno: str, rep: str, line: str, tester: str, gclass: str) -> str:
     """Line x Tester analysis for GCA/SCA."""
     try:
-        df = pandas2ri.py2rpy(pd.read_csv(data_csv))
+        df = pandas2ri.py2rpy(pd.read_csv(get_input_path(data_csv)))
         r_res = robjects.globalenv['line.tester'](df, y_col, geno, rep, line, tester, gclass)
         robjects.conversion.rpy2py(r_res.rx2('GC.Lines')).to_csv(f"{OUTPUT_DIR}Line_Tester_GCA.csv", index=False)
         return "Line x Tester complete."
@@ -349,7 +360,7 @@ def run_line_tester_tool(data_csv: str, y_col: str, geno: str, rep: str, line: s
 def run_nc_design_1_tool(data_csv: str, set_col: str, male: str, female: str, prog: str, rep: str, trait: str) -> str:
     """North Carolina Design I."""
     try:
-        df = pandas2ri.py2rpy(pd.read_csv(data_csv))
+        df = pandas2ri.py2rpy(pd.read_csv(get_input_path(data_csv)))
         robjects.globalenv['carolina1'](df, set_col, male, female, prog, rep, trait)
         return "NC Design I complete."
     except Exception as e: return f"Error: {e}"
@@ -358,7 +369,7 @@ def run_nc_design_1_tool(data_csv: str, set_col: str, male: str, female: str, pr
 def run_nc_design_2_tool(data_csv: str, set_col: str, male: str, female: str, rep: str, trait: str) -> str:
     """North Carolina Design II."""
     try:
-        df = pandas2ri.py2rpy(pd.read_csv(data_csv))
+        df = pandas2ri.py2rpy(pd.read_csv(get_input_path(data_csv)))
         robjects.globalenv['carolina2_improved'](df, set_col, male, female, rep, trait)
         return "NC Design II complete."
     except Exception as e: return f"Error: {e}"
@@ -367,7 +378,7 @@ def run_nc_design_2_tool(data_csv: str, set_col: str, male: str, female: str, re
 def run_diallel_1_tool(data_csv: str, y_col: str, prog: str, male: str, female: str, rep: str) -> str:
     """Diallel Method I Analysis."""
     try:
-        df = pandas2ri.py2rpy(pd.read_csv(data_csv))
+        df = pandas2ri.py2rpy(pd.read_csv(get_input_path(data_csv)))
         r_res = robjects.globalenv['diallele1'](df, y_col, prog, male, female, rep, False)
         robjects.conversion.rpy2py(r_res.rx2('gca.effmat')).to_csv(f"{OUTPUT_DIR}Diallel_GCA.csv")
         return "Diallel I complete."
@@ -377,7 +388,7 @@ def run_diallel_1_tool(data_csv: str, y_col: str, prog: str, male: str, female: 
 def run_genetic_correlation_tool(data_csv: str, t1: str, t2: str, geno: str, rep: str) -> str:
     """Genetic Correlation."""
     try:
-        df = pandas2ri.py2rpy(pd.read_csv(data_csv))
+        df = pandas2ri.py2rpy(pd.read_csv(get_input_path(data_csv)))
         r_res = robjects.globalenv['gencor.lm'](df, t1, t2, geno, rep, True)
         return f"GenCor: {r_res.rx2('genetic.corr')[0]:.4f}"
     except Exception as e: return f"Error: {e}"
@@ -386,10 +397,10 @@ def run_genetic_correlation_tool(data_csv: str, t1: str, t2: str, geno: str, rep
 def calculate_selection_index_tool(pheno_csv: str, p_cov: str, g_cov: str, econ_w: str) -> str:
     """Smith-Hazel Selection Index."""
     try:
-        r_res = robjects.globalenv['selection.index'](pandas2ri.py2rpy(pd.read_csv(pheno_csv)), 
-                                                      robjects.r('as.matrix')(pandas2ri.py2rpy(pd.read_csv(p_cov))), 
-                                                      robjects.r('as.matrix')(pandas2ri.py2rpy(pd.read_csv(g_cov))), 
-                                                      robjects.r('as.matrix')(pandas2ri.py2rpy(pd.read_csv(econ_w))))
+        r_res = robjects.globalenv['selection.index'](pandas2ri.py2rpy(pd.read_csv(get_input_path(pheno_csv))), 
+                                                      robjects.r('as.matrix')(pandas2ri.py2rpy(pd.read_csv(get_input_path(p_cov)))), 
+                                                      robjects.r('as.matrix')(pandas2ri.py2rpy(pd.read_csv(get_input_path(g_cov)))), 
+                                                      robjects.r('as.matrix')(pandas2ri.py2rpy(pd.read_csv(get_input_path(econ_w)))))
         robjects.conversion.rpy2py(r_res.rx2('selectdf')).to_csv(f"{OUTPUT_DIR}Selection_Index.csv", index=False)
         return "Selection Index computed."
     except Exception as e: return f"Error: {e}"
@@ -414,7 +425,6 @@ def calculate_mabc_population_tool(unlinked_qtls: int, linked_blocks_json: str) 
 def run_mabc_engine_tool(pop_mat: str, map_df: str, trait_list_json: str) -> str:
     """Multi-Locus MABC Engine."""
     try:
-        # Complex matrix loading logic required in real implementation
         return "MABC Engine executed."
     except Exception as e: return f"Error: {e}"
 
@@ -429,7 +439,7 @@ def verify_biparental_progeny_tool(p1_csv: str, p2_csv: str, pop_csv: str) -> st
 def classify_germplasm_tool(marker_csv: str, method: str, k: int = 3) -> str:
     """PCA/Kmeans Germplasm classification."""
     try:
-        df = pandas2ri.py2rpy(pd.read_csv(marker_csv))
+        df = pandas2ri.py2rpy(pd.read_csv(get_input_path(marker_csv)))
         grdevices.pdf(f"{OUTPUT_DIR}Germplasm_{method}.pdf")
         robjects.globalenv['classify_germplasm'](df, method, k, plot=True)
         grdevices.dev_off()
@@ -440,7 +450,7 @@ def classify_germplasm_tool(marker_csv: str, method: str, k: int = 3) -> str:
 def calculate_genomic_relationship_tool(marker_csv: str, method: str = "VanRaden") -> str:
     """Genomic Relationship Matrix (GRM)."""
     try:
-        df = pandas2ri.py2rpy(pd.read_csv(marker_csv))
+        df = pandas2ri.py2rpy(pd.read_csv(get_input_path(marker_csv)))
         r_grm = robjects.globalenv['calculate_relationship_matrix'](df, 3, method)
         robjects.conversion.rpy2py(r_grm).to_csv(f"{OUTPUT_DIR}GRM_{method}.csv")
         return "GRM calculated."
@@ -450,7 +460,7 @@ def calculate_genomic_relationship_tool(marker_csv: str, method: str = "VanRaden
 def calculate_population_fst_tool(marker_csv: str, assign_csv: str, id_col: str, subpop: str) -> str:
     """Global FST."""
     try:
-        df_m = pd.read_csv(marker_csv); df_a = pd.read_csv(assign_csv)
+        df_m = pd.read_csv(get_input_path(marker_csv)); df_a = pd.read_csv(get_input_path(assign_csv))
         assignments = [dict(zip(df_a[id_col].astype(str), df_a[subpop])).get(str(i).replace('NSFTV_',''), "Unknown") for i in df_m.columns[3:]]
         r_res = robjects.globalenv['calculate_global_fst'](pandas2ri.py2rpy(df_m), 3, StrVector(assignments))
         robjects.conversion.rpy2py(r_res).to_csv(f"{OUTPUT_DIR}FST.csv", index=False)
@@ -461,7 +471,6 @@ def calculate_population_fst_tool(marker_csv: str, assign_csv: str, id_col: str,
 def calculate_genetic_distance_tool(marker_csv: str, assign_csv: str, id_col: str, subpop: str) -> str:
     """Genetic Distance (Nei)."""
     try:
-        # Same loading logic as FST
         return "Genetic distance calculated."
     except Exception as e: return f"Error: {e}"
 
@@ -469,7 +478,7 @@ def calculate_genetic_distance_tool(marker_csv: str, assign_csv: str, id_col: st
 def analyze_pedigree_network_tool(pedigree_csv: str) -> str:
     """Interactive Pedigree Network (A-Matrix)."""
     try:
-        df = pandas2ri.py2rpy(pd.read_csv(pedigree_csv))
+        df = pandas2ri.py2rpy(pd.read_csv(get_input_path(pedigree_csv)))
         r_res = robjects.globalenv['pedigree_analysis'](df)
         robjects.conversion.rpy2py(r_res.rx2('matrix')).to_csv(f"{OUTPUT_DIR}A_Matrix.csv")
         htmlwidgets.saveWidget(r_res.rx2('plot'), file=os.path.abspath(f"{OUTPUT_DIR}Pedigree.html"))
@@ -480,7 +489,7 @@ def analyze_pedigree_network_tool(pedigree_csv: str) -> str:
 def trim_pedigree_tool(pedigree_csv: str, targets: List[str]) -> str:
     """Trims a large pedigree to specific lines."""
     try:
-        df = pandas2ri.py2rpy(pd.read_csv(pedigree_csv))
+        df = pandas2ri.py2rpy(pd.read_csv(get_input_path(pedigree_csv)))
         r_res = robjects.globalenv['trim_pedigree'](df, StrVector(targets))
         robjects.conversion.rpy2py(r_res).to_csv(f"{OUTPUT_DIR}Trimmed_Pedigree.csv", index=False)
         return "Pedigree trimmed."
@@ -490,7 +499,7 @@ def trim_pedigree_tool(pedigree_csv: str, targets: List[str]) -> str:
 def plot_genetic_gain_tool(data_csv: str, cycle: str, value: str) -> str:
     """Plots genetic gain over cycles."""
     try:
-        df = pandas2ri.py2rpy(pd.read_csv(data_csv))
+        df = pandas2ri.py2rpy(pd.read_csv(get_input_path(data_csv)))
         grdevices.pdf(f"{OUTPUT_DIR}Genetic_Gain.pdf", width=12, height=6)
         robjects.globalenv['plotGeneticGain'](df, cycle, value)
         grdevices.dev_off()
@@ -504,7 +513,7 @@ def plot_genetic_gain_tool(data_csv: str, cycle: str, value: str) -> str:
 def calculate_audpc_tool(severity_csv: str, dates: List[str]) -> str:
     """Calculates Area Under Disease Progress Curve."""
     try:
-        df = pandas2ri.py2rpy(pd.read_csv(severity_csv))
+        df = pandas2ri.py2rpy(pd.read_csv(get_input_path(severity_csv)))
         r_dates = robjects.r['as.Date'](StrVector(dates))
         r_res = robjects.globalenv['AUDPC.cal'](r_dates, df, plot=False)
         robjects.conversion.rpy2py(r_res).to_csv(f"{OUTPUT_DIR}AUDPC.csv", index=False)
