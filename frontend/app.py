@@ -64,6 +64,21 @@ with chat_col:
 with workspace_col:
     st.header("📂 Active Workspace")
     
+    # --- ADDED: The Developer Fix (Upload Button) ---
+    # 1. Force the system to create the input folder if it is missing
+    os.makedirs(WORKSPACE_IN, exist_ok=True)
+    
+    # 2. Render the upload widget
+    uploaded_file = st.file_uploader("Upload a new dataset here:", type=["csv", "xlsx"])
+    
+    # 3. Save the file to the input folder when dropped
+    if uploaded_file is not None:
+        file_path = os.path.join(WORKSPACE_IN, uploaded_file.name)
+        with open(file_path, "wb") as f:
+            f.write(uploaded_file.getbuffer())
+        st.success(f"✅ Successfully saved {uploaded_file.name} to inputs!")
+    # ------------------------------------------------
+    
     # Section 1: Inputs
     st.subheader("Input Datasets")
     if os.path.exists(WORKSPACE_IN):
@@ -80,6 +95,7 @@ with workspace_col:
 
     # Section 2: Outputs (Plots and Tables)
     st.subheader("Output Visualizations")
+    os.makedirs(WORKSPACE_OUT, exist_ok=True) # Ensure outputs dir exists too
     if os.path.exists(WORKSPACE_OUT):
         outputs = os.listdir(WORKSPACE_OUT)
         
