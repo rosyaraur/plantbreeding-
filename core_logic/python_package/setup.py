@@ -5,7 +5,7 @@ setup(
     name="plantbreeding_py",
     version="2.0.0",
     author="Umesh R. Rosyara",
-    author_email="rosyara@wisc.edu",
+    author_email="rosyaraur@gmail.com",
     description="Python suite for analysis of plant breeding and genetics experiments.",
     packages=find_packages(), # Automatically finds the 'plantbreeding_py' folder
     install_requires=[
