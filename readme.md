@@ -1,5 +1,5 @@
 
-<img src="assets/banner.jpeg" width="600" align="center"> 
+<img src="assets/banner.jpeg" width="900" align="center"> 
 
 <img src="assets/logo.png" width="90" align="left"> 
 
@@ -17,7 +17,7 @@ It bridges the gap between natural language and complex statistical computing. U
 # ![PlantbreedAIAgent UI](https://via.placeholder.com/800x400.png?text=Replace+with+your+Streamlit+Screenshot)
 ```
 
-<img src="assets/agent_overview.png" width="600" align="center"> 
+<img src="assets/agent_overview.png" width="900" align="center"> 
 
 ### 🌟 Key Features
 
