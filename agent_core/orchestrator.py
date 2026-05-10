@@ -1,6 +1,8 @@
 # agent_core/orchestrator.py
 
 # FIXED: Now using the official tool-calling Ollama integration
+from langchain.agents.format_scratchpad.tools import format_to_tool_messages
+from langchain.agents.output_parsers.tools import ToolsAgentOutputParser
 from langchain_ollama import ChatOllama
 from langchain.agents import AgentExecutor, create_tool_calling_agent
 from langchain_core.prompts import ChatPromptTemplate
@@ -14,6 +16,9 @@ When a user asks for an analysis:
 2. Ensure the required dataset is referenced in the workspace.
 3. Execute the tool.
 4. Summarize the findings based on the tool's output. Do not hallucinate or make up statistical results.
+
+CRITICAL RULE: You are an execution agent. NEVER output raw JSON tool calls, python dictionaries, or raw code blocks to the user.
+You must execute the tools silently in the background and only provide the user with a conversational, human-readable summary of the final results.
 
 CRITICAL RULE: All user datasets are securely located in the 'workspace/inputs/' directory. If a user asks you
 to analyze a file like 'data.csv',
