@@ -10,6 +10,11 @@ API_URL = "http://127.0.0.1:8000/chat"
 WORKSPACE_IN = "/content/PlantbreedAIAgent/workspace/inputs/"
 WORKSPACE_OUT = "/content/PlantbreedAIAgent/workspace/outputs/"
 
+# Assets Configuration
+ASSETS_DIR = "/content/PlantbreedAIAgent/assets/"
+LOGO_PATH = os.path.join(ASSETS_DIR, "logo.png")
+BANNER_PATH = os.path.join(ASSETS_DIR, "banner.jpeg")
+
 # --- Helper Functions ---
 def fetch_ai_response(user_message):
     """Sends the message to your FastAPI backend."""
@@ -22,6 +27,16 @@ def fetch_ai_response(user_message):
     except Exception as e:
         return f"Backend is offline. Start it with `uvicorn api.server:app`."
 
+# ==========================================
+# HEADER: BANNER 
+# ==========================================
+if os.path.exists(BANNER_PATH):
+    st.image(BANNER_PATH, use_container_width=True)
+else:
+    st.warning("Banner image not found in assets folder. Please check the path.")
+
+st.divider()
+
 # --- App Layout: 2 Columns ---
 # Left column gets 65% of screen (Chat), Right gets 35% (Workspace)
 chat_col, workspace_col = st.columns([2.2, 1])
@@ -30,7 +45,13 @@ chat_col, workspace_col = st.columns([2.2, 1])
 # LEFT COLUMN: THE CHAT INTERFACE
 # ==========================================
 with chat_col:
-    st.title("🌱 PlantbreedAIAgent Engine")
+    # Title row with Logo
+    title_col1, title_col2 = st.columns([1, 10])
+    with title_col1:
+        if os.path.exists(LOGO_PATH):
+            st.image(LOGO_PATH, width=60)
+    with title_col2:
+        st.title("PlantbreedAIAgent Engine")
     
     # Initialize chat history in session state
     if "messages" not in st.session_state:
@@ -57,14 +78,12 @@ with chat_col:
                 st.markdown(ai_reply)
         st.session_state.messages.append({"role": "assistant", "content": ai_reply})
 
-
 # ==========================================
 # RIGHT COLUMN: THE ACTIVE WORKSPACE
 # ==========================================
 with workspace_col:
     st.header("📂 Active Workspace")
     
-    # --- ADDED: The Developer Fix (Upload Button) ---
     # 1. Force the system to create the input folder if it is missing
     os.makedirs(WORKSPACE_IN, exist_ok=True)
     
@@ -77,7 +96,6 @@ with workspace_col:
         with open(file_path, "wb") as f:
             f.write(uploaded_file.getbuffer())
         st.success(f"✅ Successfully saved {uploaded_file.name} to inputs!")
-    # ------------------------------------------------
     
     # Section 1: Inputs
     st.subheader("Input Datasets")
@@ -99,22 +117,22 @@ with workspace_col:
     if os.path.exists(WORKSPACE_OUT):
         outputs = os.listdir(WORKSPACE_OUT)
         
-        # Display PDFs/PNGs (Like the GGE Biplots or Spatial Heatmaps)
+        # Display PDFs/PNGs
         images = [f for f in outputs if f.endswith(('.png', '.jpg', '.jpeg'))]
         for img in images:
             st.image(os.path.join(WORKSPACE_OUT, img), caption=img, use_container_width=True)
             
-        # Optional: Provide download buttons for PDFs (since Streamlit can't render PDFs natively inline easily)
+        # Display PDFs
         pdfs = [f for f in outputs if f.endswith('.pdf')]
         for pdf in pdfs:
             with open(os.path.join(WORKSPACE_OUT, pdf), "rb") as file:
                 st.download_button(label=f"📥 Download {pdf}", data=file, file_name=pdf, mime="application/pdf")
                 
-        # Display short previews of generated CSVs (Like the AMMI or Fast ranks)
+        # Display short previews of generated CSVs
         csvs = [f for f in outputs if f.endswith('.csv')]
         for csv in csvs:
             with st.expander(f"📊 {csv}"):
                 df = pd.read_csv(os.path.join(WORKSPACE_OUT, csv))
-                st.dataframe(df.head(10)) # Show first 10 rows
+                st.dataframe(df.head(10)) 
     else:
         st.caption("Waiting for analysis outputs...")
