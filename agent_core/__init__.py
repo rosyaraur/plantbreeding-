@@ -2,4 +2,4 @@
 from .orchestrator import PlantbreedAIAgent
 from .state import AgentState
 
-__all__ = ["PlantBreedAIAgent", "AgentState"]
+__all__ = ["PlantbreedAIAgent", "AgentState"]
