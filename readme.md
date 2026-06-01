@@ -23,7 +23,7 @@ It bridges the gap between natural language and complex statistical computing. U
 
 * **Conversational Biometrics:** Ask the agent to "Run a spatial ANCOVA on my yield data" or "Calculate the win probability against the standard check," and it will automatically map your request to the correct statistical tool.
 * **Dual-Language Core:** Built on top of `plantbreeding` (R) and `plantbreeding_py` (Python). Both can be used by the AI Agent or installed separately as standalone packages.
-* **Comprehensive Agronomic Toolkit:**
+* **Comprehensive Breeding / Agronomic Toolkit:**
   * **Experimental Design:** RCBD, Alpha-Lattice, Strip-Plot, P-Rep, and Inventory-driven Augmented layouts.
   * **Mixed Models:** BLUEs/BLUPs, Spatial ANCOVA, and Unreplicated spatial adjustments.
   * **GxE & Stability:** AMMI, GGE Biplots, Factor Analytic Selection Tools (FAST), and Safety-First indices.
