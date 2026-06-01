@@ -93,7 +93,7 @@ To run the conversational agent with the UI, you need to start both the backend 
 Clone the repository and install the required Python orchestration libraries (FastAPI, Streamlit, LangChain, and rpy2):
 
 ```bash
-git clone [https://github.com/yourusername/PlantbreedAIAgent.git](https://github.com/yourusername/PlantbreedAIAgent.git)
+git clone [https://github.com/rosyaraur/PlantbreedAIAgent.git](https://github.com/rosyaraur/PlantbreedAIAgent.git)
 cd PlantbreedAIAgent
 pip install -r requirements.txt
 
